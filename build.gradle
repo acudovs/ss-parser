@@ -1,0 +1,51 @@
+plugins {
+    id 'com.google.cloud.tools.jib' version '0.9.10'
+    id 'org.springframework.boot' version '2.0.4.RELEASE'
+}
+
+apply plugin: 'idea'
+apply plugin: 'java'
+apply plugin: 'io.spring.dependency-management'
+
+version = '1.0'
+
+sourceCompatibility = 1.8
+
+jib {
+    from {
+        image = 'gcr.io/distroless/java'
+    }
+    to {
+        image = rootProject.name + ':' + version
+    }
+    container {
+        jvmFlags = ['-Dfile.encoding=UTF-8', '-Xms64m', '-Xmx64m', '-XX:+PrintGCDateStamps', '-XX:+PrintGCDetails']
+        useCurrentTimestamp = true
+    }
+}
+
+idea {
+    module {
+        inheritOutputDirs = false
+        outputDir = file 'build/classes/java/main'
+        testOutputDir = file 'build/classes/test/main'
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+    compileOnly 'org.projectlombok:lombok'
+    compileOnly 'org.springframework.boot:spring-boot-configuration-processor'
+    compileOnly 'org.springframework.boot:spring-boot-loader'
+
+    compile 'org.apache.commons:commons-lang3'
+    compile 'org.springframework.boot:spring-boot-starter-mail'
+
+    testCompile 'org.springframework.boot:spring-boot-starter-test'
+}
