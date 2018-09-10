@@ -20,6 +20,22 @@ public abstract class AdConfigImpl implements AdConfig {
     private String replace;
     private Expression expression;
 
+    protected static double parseDouble(String s) {
+        return s == null ? 0 : Double.parseDouble(s.replaceAll("[^-\\d]", ""));
+    }
+
+    protected static int parseInt(String s) {
+        return s == null ? 0 : Integer.parseInt(s.replaceAll("[^-\\d]", ""));
+    }
+
+    protected static String parseString(String s) {
+        return s == null ? "" : s;
+    }
+
+    protected static double convert(double value, String unit) {
+        return value * (unit.equals("га.") ? 10000 : 1);
+    }
+
     @Component
     @ConfigurationPropertiesBinding
     static class ExpressionConverter implements Converter<Object, Expression> {

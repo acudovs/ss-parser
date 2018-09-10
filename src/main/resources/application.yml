@@ -24,20 +24,20 @@ ss-parser:
   car:
     rate: 1m
     url: https://www.ss.com/ru/transport/cars/sell/rss/
-    regex: "(?s:Марка: (<b>)+(?<mark>.+?)<br>(?<model>.+?)(</b>)+.+?Год: (<b>)+(?<year>\\d+).+?Объём: (<b>)+(?<engine>.+?)(</b>).+?(Пробег: (<b>)+(?<run>\\d+).+?)?Цена: (<b>)+(?<price>[\\d,]+))(</b>)?  €</b><br/>"
+    regex: "(?s:(Марка: (<b>)+(?<mark>.+?)<br>(?<model>.+?)(</b>)+.+?)?Год: (<b>)+(?<year>\\d+).+?Объём: (<b>)+(?<engine>.+?)(</b>).+?(Пробег: (<b>)+(?<run>\\d+).+?)?Цена: (<b>)+(?<price>[\\d,]+))(</b>)?  €</b><br/>"
     replace: "Марка: <b>${mark}</b><br/>Модель: <b>${model}</b><br/>Год: <b>${year}</b><br/>Двигатель: <b>${engine}</b><br/>Пробег: <b>${run} тыс.</b><br/>Цена: <b>${price} €</b>"
     expression: true
 
   flat:
     rate: 1m
     url: https://www.ss.com/ru/real-estate/flats/riga/sell/rss/
-    regex: "(?s:Район: (<b>)+(?<region>.+?)<br>(?<address>.+?)(</b>)+.+?(К\\.: (<b>)+(?<rooms>\\d+).+?)?m2: (<b>)+(?<area>\\d+)(</b>)+<br/>Этаж: (<b>)+(?<floor>\\d+)(</b>)+<br/>Серия: (<b>)+(?<series>.+?)(</b>)+<br/>: (<b>)+(?<ppm2>[\\d,]+).+?Цена: (<b>)+(?<price>[\\d,]+)(</b>)?  €</b><br/>)"
+    regex: "(?s:Район: (<b>)+(?<region>.+?)<br>(?<address>.+?)(</b>)+.+?(К\\.: (<b>)+(?<rooms>\\d+).+?)?m2: (<b>)+(?<area>\\d+)(</b>)+<br/>Этаж: (<b>)+(?<floor>-?\\d+)(</b>)+<br/>Серия: (<b>)+(?<series>.+?)(</b>)+<br/>: (<b>)+(?<ppm2>[\\d,]+).+?Цена: (<b>)+(?<price>[\\d,]+)(</b>)?  €</b><br/>)"
     replace: "Район: <b>${region}</b><br/>Адрес: <b>${address}</b><br/>Комнат: <b>${rooms}</b><br/>Площадь: <b>${area} м2</b><br/>Этаж: <b>${floor}</b><br/>Серия: <b>${series}</b><br/>Цена за м2: <b>${ppm2} €</b><br/>Цена: <b>${price} €</b>"
     expression: true
 
   home:
     rate: 1m
     url: https://www.ss.com/ru/real-estate/homes-summer-residences/riga/sell/rss/
-    regex: "(?s:Район: (<b>)+(?<region>.+?)<br>(?<address>.+?)(</b>)+.+?m2: (<b>)+(?<area>\\d+)(</b>)+<br/>Этажей: (<b>)+(?<floors>\\d+)(</b>)+<br/>Пл\\. зем\\.: (<b>)+(?<land>\\d+)(\\.\\d+)? м2(</b>)+<br/>Цена: (<b>)+(?<price>[\\d,]+)(</b>)?  €</b><br/>)"
-    replace: "Район: <b>${region}</b><br/>Адрес: <b>${address}</b><br/>Площадь: <b>${area} м2</b><br/>Этажей: <b>${floors}</b><br/>Площадь земли: <b>${land} м2</b><br/>Цена: <b>${price} €</b>"
+    regex: "(?s:Район: (<b>)+(?<region>.+?)<br>(?<address>.+?)(</b>)+.+?m2: (<b>)+(?<area>\\d+)(</b>)+<br/>Этажей: (<b>)+(?<floors>\\d+)(</b>)+<br/>Пл\\. зем\\.: (<b>)+(?<land>[\\d.]+) (?<unit>га\\.|м2)(</b>)+<br/>Цена: (<b>)+(?<price>[\\d,]+)(</b>)?  €</b><br/>)"
+    replace: "Район: <b>${region}</b><br/>Адрес: <b>${address}</b><br/>Площадь: <b>${area} м2</b><br/>Этажей: <b>${floors}</b><br/>Площадь земли: <b>${land} ${unit}</b><br/>Цена: <b>${price} €</b>"
     expression: true

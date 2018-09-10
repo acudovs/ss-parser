@@ -12,10 +12,10 @@ class Home extends AdImpl {
     private final String address;
     private final int area;
     private final int floors;
-    private final int land;
+    private final double land;
     private final int price;
 
-    Home(Element element, String region, String address, int area, int floors, int land, int price) {
+    Home(Element element, String region, String address, int area, int floors, double land, int price) {
         super(element);
         this.region = region;
         this.address = address;

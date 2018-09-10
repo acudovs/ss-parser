@@ -26,9 +26,9 @@ class MailServiceImpl implements MailService {
     public void offer(List<Ad> ads) {
         if (isEnabled()) {
             String key = ads.get(0).getClass().getName();
-            String html = ads.stream().map(Ad::toHtml).collect(Collectors.joining("<br><br>"));
-            mailQueue.merge(key, html, (oldValue, newValue) -> oldValue + "<br><br>" + newValue);
-            log.debug("Message to {} queued", mailConfig.getTo());
+            String html = ads.stream().map(Ad::toHtml).collect(Collectors.joining("<br/>"));
+            mailQueue.merge(key, html, (oldValue, newValue) -> oldValue + "<br/>" + newValue);
+            log.debug("Message to {} queued: {}", mailConfig.getTo(), key);
         }
     }
 
@@ -50,7 +50,7 @@ class MailServiceImpl implements MailService {
         for (String key : mailQueue.keySet()) {
             String html = mailQueue.remove(key);
             send(html, true);
-            log.debug("Messages to {} sent: {}", mailConfig.getTo(), key);
+            log.debug("Message to {} sent: {}", mailConfig.getTo(), key);
         }
     }
 

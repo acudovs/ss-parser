@@ -7,6 +7,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import ss.parser.mail.MailService;
 import ss.parser.scheduler.AdConfig;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -20,17 +21,19 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Getter
-public abstract class ChannelImpl extends RssElementImpl implements Channel {
+public class ChannelImpl extends RssElementImpl implements Channel {
     private final Logger log = LoggerFactory.getLogger(getClass());
     private final AdConfig adConfig;
+    private final MailService mailService;
     private final Pattern pattern;
     private final ZonedDateTime lastBuildDate;
     private final int ttl;
     private final List<Ad> ads;
 
-    public ChannelImpl(AdConfig adConfig) {
+    public ChannelImpl(AdConfig adConfig, MailService mailService) {
         super(newElement(adConfig.getUrl()));
         this.adConfig = adConfig;
+        this.mailService = mailService;
         pattern = Pattern.compile(adConfig.getRegex());
         lastBuildDate = parseDate(getContent("lastBuildDate"));
         ttl = Integer.parseInt(getContent("ttl"));
@@ -43,9 +46,7 @@ public abstract class ChannelImpl extends RssElementImpl implements Channel {
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document doc = builder.parse(url.openStream());
             Element rss = doc.getDocumentElement();
-
             return (Element) rss.getElementsByTagName("channel").item(0);
-
         } catch (Exception e) {
             throw new RuntimeException("Can not open RSS channel " + url, e);
         }
@@ -61,15 +62,15 @@ public abstract class ChannelImpl extends RssElementImpl implements Channel {
             Matcher matcher = pattern.matcher(description);
             if (matcher.find()) {
                 node.setTextContent(pattern.matcher(description).replaceAll(adConfig.getReplace()));
-                ads.add(newAd(item, matcher));
+                ads.add(adConfig.newAd(item, matcher));
             } else {
-                log.error("RSS item description does not match regex:\n{}", description);
+                String message = "RSS item description does not match regex:\n" + description;
+                log.error(message);
+                mailService.send(message);
             }
         }
         return Collections.unmodifiableList(ads);
     }
-
-    protected abstract Ad newAd(Element element, Matcher matcher);
 
     @Override
     public String toString() {
