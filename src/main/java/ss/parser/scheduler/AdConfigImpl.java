@@ -6,6 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesBindin
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.expression.Expression;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
@@ -20,20 +21,20 @@ public abstract class AdConfigImpl implements AdConfig {
     private String replace;
     private Expression expression;
 
-    protected static double parseDouble(String s) {
-        return s == null ? 0 : Double.parseDouble(s.replaceAll("[^-\\d]", ""));
+    protected static double parseDouble(@Nullable String s) {
+        return s == null ? 0 : Double.parseDouble(s.replaceAll("[^-\\d.]", ""));
     }
 
-    protected static int parseInt(String s) {
+    protected static int parseInt(@Nullable String s) {
         return s == null ? 0 : Integer.parseInt(s.replaceAll("[^-\\d]", ""));
     }
 
-    protected static String parseString(String s) {
+    protected static String parseString(@Nullable String s) {
         return s == null ? "" : s;
     }
 
-    protected static double convert(double value, String unit) {
-        return value * (unit.equals("га.") ? 10000 : 1);
+    protected static double convert(double value, @Nullable String unit) {
+        return unit != null && unit.equals("га.") ? value * 10000 : value;
     }
 
     @Component

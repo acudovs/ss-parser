@@ -38,6 +38,6 @@ ss-parser:
   home:
     rate: 1m
     url: https://www.ss.com/ru/real-estate/homes-summer-residences/riga/sell/rss/
-    regex: "(?s:Район: (<b>)+(?<region>.+?)<br>(?<address>.+?)(</b>)+.+?m2: (<b>)+(?<area>\\d+)(</b>)+<br/>Этажей: (<b>)+(?<floors>\\d+)(</b>)+<br/>Пл\\. зем\\.: (<b>)+(?<land>[\\d.]+) (?<unit>га\\.|м2)(</b>)+<br/>Цена: (<b>)+(?<price>[\\d,]+)(</b>)?  €</b><br/>)"
+    regex: "(?s:Район: (<b>)+(?<region>.+?)<br>(?<address>.+?)(</b>)+.+?m2: (<b>)+(?<area>\\d+)(</b>)+<br/>Этажей: (<b>)+(?<floors>\\d+)(</b>)+<br/>Пл\\. зем\\.: (<b>)+(?<land>[\\d.]+)( (?<unit>га\\.|м2))?(</b>)+<br/>Цена: (<b>)+(?<price>[\\d,]+)(</b>)?  €</b><br/>)"
     replace: "Район: <b>${region}</b><br/>Адрес: <b>${address}</b><br/>Площадь: <b>${area} м2</b><br/>Этажей: <b>${floors}</b><br/>Площадь земли: <b>${land} ${unit}</b><br/>Цена: <b>${price} €</b>"
     expression: true

@@ -9,6 +9,8 @@ import ss.parser.rss.Ad;
 import ss.parser.rss.Channel;
 
 import java.time.Duration;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,7 +21,7 @@ public abstract class AdTaskImpl implements AdTask {
     private final Logger log = LoggerFactory.getLogger(getClass());
     private final AdConfig adConfig;
     private final MailService mailService;
-    private ZonedDateTime lastBuildDate;
+    private ZonedDateTime lastBuildDate = ZonedDateTime.ofInstant(Instant.EPOCH, ZoneId.systemDefault());
 
     @Override
     public Duration getRate() {
@@ -29,7 +31,7 @@ public abstract class AdTaskImpl implements AdTask {
     @Override
     public void run() {
         Channel channel = newChannel();
-        if (!isFresh(channel.getLastBuildDate())) {
+        if (!channel.getLastBuildDate().isAfter(lastBuildDate)) {
             log.info("{} is already parsed on {}", channel, channel.getLastBuildDate());
             return;
         }
@@ -45,13 +47,9 @@ public abstract class AdTaskImpl implements AdTask {
         lastBuildDate = channel.getLastBuildDate();
     }
 
-    private boolean isFresh(ZonedDateTime date) {
-        return lastBuildDate == null || date.isAfter(lastBuildDate);
-    }
-
     private List<Ad> filter(List<Ad> ads) {
         return ads.stream()
-                .filter(ad -> isFresh(ad.getPubDate()))
+                .filter(ad -> ad.getPubDate().isAfter(lastBuildDate))
                 .filter(ad -> (boolean) adConfig.getExpression().getValue(ad))
                 .collect(Collectors.toList());
     }
