@@ -19,9 +19,9 @@ Congratulations! You have just compiled the SS.COM Parser Java application, pack
 
 ## Configuration
 
-Spring Boot lets you [customize configuration](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-external-config) in a various ways. To customize Docker application configuration it is convenient to use environment variables. The properties supported by SS.COM Parser and Spring Boot with their default values are shown in [application.yml](https://github.com/AlekseyChudov/ss-parser/blob/master/src/main/resources/application.yml) and [Appendix A, Common application properties](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#common-application-properties) respectively. SS.COM Parser uses [Spring Expression Language (SpEL)](https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#expressions) as filter engine.
+Spring Boot lets you [customize configuration](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html) in a various ways. To customize Docker application configuration it is convenient to use environment variables. The properties supported by SS.COM Parser and Spring Boot with their default values are shown in [application.yml](https://github.com/AlekseyChudov/ss-parser/blob/master/src/main/resources/application.yml) and [Appendix A, Common application properties](https://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html) respectively. SS.COM Parser uses [Spring Expression Language (SpEL)](https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#expressions) as filter engine.
 
-Create environment variables file `ss-parser.env`. Do not forget to convert the values from yaml or properties format into environment variables format.
+Create environment variables file `ss-parser.env`. Do not forget to convert the values from yaml or properties format into [environment variables format](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html#boot-features-external-config-relaxed-binding).
 
 ```shell
 SPRING_MAIL_HOST=smtp.gmail.com
@@ -44,3 +44,11 @@ Then run the Docker container with the new configuration file.
 ```shell
 docker run -it --rm --env-file ss-parser.env ss-parser:1.1
 ```
+
+Once you are satisfied with the filter and configuration, just run the Docker container in the background.
+
+```shell
+docker run -d --rm --env-file ss-parser.env ss-parser:1.1
+```
+
+If you are not familiar with Docker and containers, there are many tutorials like [A Docker Tutorial for Beginners](https://docker-curriculum.com/).
