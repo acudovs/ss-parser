@@ -1,9 +1,6 @@
 logging:
   level:
-    ss.parser.car.CarTask: DEBUG
-    ss.parser.home.HomeTask: DEBUG
-    ss.parser.flat.FlatTask: DEBUG
-    ss.parser.mail.MailServiceImpl: DEBUG
+    ss.parser: DEBUG
 
 spring:
   mail:
@@ -24,7 +21,7 @@ ss-parser:
   car:
     rate: 1m
     url: https://www.ss.com/ru/transport/cars/sell/rss/
-    regex: "(?s:(Марка: (<b>)+(?<mark>.+?)<br>(?<model>.+?)(</b>)+.+?)?Год: (<b>)+(?<year>\\d+).+?Объём: (<b>)+(?<engine>.+?)(</b>).+?(Пробег: (<b>)+(?<run>\\d+).+?)?Цена: (<b>)+(?<price>[\\d,]+))(</b>)?  €</b><br/>"
+    regex: "(?s:(Марка: (<b>)+(?<mark>.+?)<br>(?<model>.+?)(</b>)+.+?)?Год: (<b>)+(?<year>\\d+).+?(Объём: (<b>)+(?<engine>.+?)(</b>).+?)?(Пробег: (<b>)+(?<run>\\d+).+?)?Цена: (<b>)+(?<price>[\\d,]+))(</b>)?  €</b><br/>"
     replace: "Марка: <b>${mark}</b><br/>Модель: <b>${model}</b><br/>Год: <b>${year}</b><br/>Двигатель: <b>${engine}</b><br/>Пробег: <b>${run} тыс.</b><br/>Цена: <b>${price} €</b>"
     expression: true
 

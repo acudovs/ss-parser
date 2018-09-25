@@ -23,7 +23,7 @@ class Scheduler {
         ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
         scheduler.setErrorHandler(t -> {
             log.error("Unexpected error occurred in scheduled task", t);
-            mailService.send(ExceptionUtils.getStackTrace(t));
+            mailService.queue(getClass().getName(), ExceptionUtils.getStackTrace(t), false);
         });
         scheduler.setPoolSize(tasks.size());
         scheduler.initialize();

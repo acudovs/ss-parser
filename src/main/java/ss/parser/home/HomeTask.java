@@ -2,18 +2,11 @@ package ss.parser.home;
 
 import org.springframework.stereotype.Component;
 import ss.parser.mail.MailService;
-import ss.parser.rss.Channel;
-import ss.parser.rss.ChannelImpl;
-import ss.parser.scheduler.AdTaskImpl;
+import ss.parser.scheduler.AdTask;
 
 @Component
-class HomeTask extends AdTaskImpl {
+class HomeTask extends AdTask {
     HomeTask(HomeConfig homeConfig, MailService mailService) {
         super(homeConfig, mailService);
-    }
-
-    @Override
-    public Channel newChannel() {
-        return new ChannelImpl(getAdConfig(), getMailService());
     }
 }

@@ -2,18 +2,11 @@ package ss.parser.flat;
 
 import org.springframework.stereotype.Component;
 import ss.parser.mail.MailService;
-import ss.parser.rss.Channel;
-import ss.parser.rss.ChannelImpl;
-import ss.parser.scheduler.AdTaskImpl;
+import ss.parser.scheduler.AdTask;
 
 @Component
-class FlatTask extends AdTaskImpl {
+class FlatTask extends AdTask {
     FlatTask(FlatConfig flatConfig, MailService mailService) {
         super(flatConfig, mailService);
-    }
-
-    @Override
-    public Channel newChannel() {
-        return new ChannelImpl(getAdConfig(), getMailService());
     }
 }
