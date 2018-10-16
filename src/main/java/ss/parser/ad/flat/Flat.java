@@ -1,9 +1,9 @@
-package ss.parser.flat;
+package ss.parser.ad.flat;
 
 import lombok.Getter;
 import lombok.ToString;
 import org.w3c.dom.Element;
-import ss.parser.rss.AdImpl;
+import ss.parser.ad.AdImpl;
 
 @Getter
 @ToString

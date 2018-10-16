@@ -1,4 +1,6 @@
-package ss.parser.rss;
+package ss.parser.ad;
+
+import ss.parser.rss.RssElement;
 
 import java.time.ZonedDateTime;
 

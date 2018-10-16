@@ -1,4 +1,4 @@
-package ss.parser.scheduler;
+package ss.parser.ad;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -17,6 +17,7 @@ import java.time.Duration;
 public abstract class AdConfigImpl implements AdConfig {
     private Duration rate;
     private URL url;
+    private Duration timeout;
     private String regex;
     private String replace;
     private Expression expression;

@@ -7,12 +7,15 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import ss.parser.ad.Ad;
+import ss.parser.ad.AdConfig;
 import ss.parser.mail.MailService;
-import ss.parser.scheduler.AdConfig;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.net.URL;
+import java.net.URLConnection;
+import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,7 +24,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Getter
-public class ChannelImpl extends RssElementImpl implements Channel {
+public class RssChannelImpl extends RssElementImpl implements RssChannel {
     private final Logger log = LoggerFactory.getLogger(getClass());
     private final AdConfig adConfig;
     private final MailService mailService;
@@ -30,8 +33,8 @@ public class ChannelImpl extends RssElementImpl implements Channel {
     private final int ttl;
     private final List<Ad> ads;
 
-    public ChannelImpl(AdConfig adConfig, MailService mailService) {
-        super(newElement(adConfig.getUrl()));
+    public RssChannelImpl(AdConfig adConfig, MailService mailService) {
+        super(newElement(adConfig.getUrl(), adConfig.getTimeout()));
         this.adConfig = adConfig;
         this.mailService = mailService;
         pattern = Pattern.compile(adConfig.getRegex());
@@ -40,16 +43,29 @@ public class ChannelImpl extends RssElementImpl implements Channel {
         ads = parseAds();
     }
 
-    private static Element newElement(URL url) {
+    private static Element newElement(URL url, Duration timeout) {
         try {
+            URLConnection con = url.openConnection();
+            con.setConnectTimeout(Math.toIntExact(timeout.toMillis()));
+            con.setReadTimeout(Math.toIntExact(timeout.toMillis()));
+            con.setRequestProperty("User-Agent", getHttpAgent());
+
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
-            Document doc = builder.parse(url.openStream());
+            Document doc = builder.parse(con.getInputStream());
             Element rss = doc.getDocumentElement();
+
             return (Element) rss.getElementsByTagName("channel").item(0);
+
         } catch (Exception e) {
             throw new RuntimeException("Can not open RSS channel " + url, e);
         }
+    }
+
+    private static String getHttpAgent() {
+        return System.getProperty("http.agent",
+                System.getenv().getOrDefault("HTTP_AGENT",
+                        "Java/" + System.getProperty("java.version")));
     }
 
     private List<Ad> parseAds() {

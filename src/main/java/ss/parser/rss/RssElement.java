@@ -1,6 +1,6 @@
 package ss.parser.rss;
 
-interface RssElement {
+public interface RssElement {
     String getTitle();
 
     String getLink();

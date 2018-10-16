@@ -1,8 +1,8 @@
-package ss.parser.home;
+package ss.parser.ad.home;
 
 import org.springframework.stereotype.Component;
+import ss.parser.ad.AdTask;
 import ss.parser.mail.MailService;
-import ss.parser.scheduler.AdTask;
 
 @Component
 class HomeTask extends AdTask {

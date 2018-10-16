@@ -1,7 +1,8 @@
-package ss.parser.rss;
+package ss.parser.ad;
 
 import lombok.Getter;
 import org.w3c.dom.Element;
+import ss.parser.rss.RssElementImpl;
 
 import java.time.ZonedDateTime;
 

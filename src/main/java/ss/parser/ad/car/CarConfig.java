@@ -1,10 +1,10 @@
-package ss.parser.car;
+package ss.parser.ad.car;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Element;
-import ss.parser.rss.Ad;
-import ss.parser.scheduler.AdConfigImpl;
+import ss.parser.ad.Ad;
+import ss.parser.ad.AdConfigImpl;
 
 import java.util.regex.Matcher;
 

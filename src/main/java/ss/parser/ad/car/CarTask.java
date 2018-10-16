@@ -1,8 +1,8 @@
-package ss.parser.car;
+package ss.parser.ad.car;
 
 import org.springframework.stereotype.Component;
+import ss.parser.ad.AdTask;
 import ss.parser.mail.MailService;
-import ss.parser.scheduler.AdTask;
 
 @Component
 class CarTask extends AdTask {

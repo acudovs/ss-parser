@@ -1,8 +1,8 @@
-package ss.parser.flat;
+package ss.parser.ad.flat;
 
 import org.springframework.stereotype.Component;
+import ss.parser.ad.AdTask;
 import ss.parser.mail.MailService;
-import ss.parser.scheduler.AdTask;
 
 @Component
 class FlatTask extends AdTask {

@@ -1,8 +1,7 @@
-package ss.parser.scheduler;
+package ss.parser.ad;
 
 import org.springframework.expression.Expression;
 import org.w3c.dom.Element;
-import ss.parser.rss.Ad;
 
 import java.net.URL;
 import java.time.Duration;
@@ -12,6 +11,8 @@ public interface AdConfig {
     Duration getRate();
 
     URL getUrl();
+
+    Duration getTimeout();
 
     String getRegex();
 
