@@ -23,6 +23,11 @@ public abstract class AdTask implements SchedulerTask {
     private ZonedDateTime lastBuildDate = ZonedDateTime.ofInstant(Instant.EPOCH, ZoneId.systemDefault());
 
     @Override
+    public boolean isEnabled() {
+        return adConfig.isEnabled();
+    }
+
+    @Override
     public Duration getRate() {
         return adConfig.getRate();
     }

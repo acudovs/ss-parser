@@ -8,6 +8,8 @@ import java.time.Duration;
 import java.util.regex.Matcher;
 
 public interface AdConfig {
+    boolean isEnabled();
+
     Duration getRate();
 
     URL getUrl();

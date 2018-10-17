@@ -30,6 +30,11 @@ class MailServiceImpl implements MailService {
     }
 
     @Override
+    public boolean isEnabled() {
+        return mailConfig.isEnabled();
+    }
+
+    @Override
     public Duration getRate() {
         return mailConfig.getRate();
     }

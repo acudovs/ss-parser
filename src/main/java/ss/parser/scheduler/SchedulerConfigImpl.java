@@ -10,5 +10,6 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties("ss-parser.scheduler")
 class SchedulerConfigImpl implements SchedulerConfig {
+    private boolean parallel;
     private boolean randomize;
 }

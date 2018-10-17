@@ -13,9 +13,9 @@ import java.time.Duration;
 @Component
 @ConfigurationProperties("ss-parser.mail")
 class MailConfigImpl implements MailConfig {
+    private boolean enabled;
     private Duration rate;
     private InternetAddress from;
-    private InternetAddress to;
+    private InternetAddress[] to;
     private String subject;
-    private boolean enabled;
 }

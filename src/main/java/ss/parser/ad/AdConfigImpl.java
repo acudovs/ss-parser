@@ -15,6 +15,7 @@ import java.time.Duration;
 @Getter
 @Setter
 public abstract class AdConfigImpl implements AdConfig {
+    private boolean enabled;
     private Duration rate;
     private URL url;
     private Duration timeout;

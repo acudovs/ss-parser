@@ -1,13 +1,13 @@
 plugins {
-    id 'com.google.cloud.tools.jib' version '0.9.12'
-    id 'org.springframework.boot' version '2.0.5.RELEASE'
+    id 'com.google.cloud.tools.jib' version '0.9.13'
+    id 'org.springframework.boot' version '2.0.6.RELEASE'
 }
 
 apply plugin: 'idea'
 apply plugin: 'java'
 apply plugin: 'io.spring.dependency-management'
 
-version = '1.4'
+version = '1.5'
 
 sourceCompatibility = 1.8
 
@@ -19,7 +19,14 @@ jib {
         image = rootProject.name + ':' + version
     }
     container {
-        jvmFlags = ['-Dfile.encoding=UTF-8', '-Xms64m', '-Xmx64m', '-XX:+PrintGCDateStamps', '-XX:+PrintGCDetails']
+        jvmFlags = [
+                '-Dfile.encoding=UTF-8',
+                '-Duser.timezone=Europe/Riga',
+                '-Xms64m',
+                '-Xmx64m',
+                '-XX:+PrintGCDateStamps',
+                '-XX:+PrintGCDetails'
+        ]
         useCurrentTimestamp = true
     }
 }

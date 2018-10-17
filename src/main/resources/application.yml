@@ -12,16 +12,18 @@ spring:
 
 ss-parser:
   scheduler:
+    parallel: true
     randomize: false
 
   mail:
+    enabled: false
     rate: 1h
     from: user@localhost
     to: user@localhost
     subject: Новые объекты, отвечающие вашему поиску SS.COM
-    enabled: false
 
   car:
+    enabled: true
     rate: 10m
     url: https://www.ss.com/ru/transport/cars/sell/rss/
     timeout: 10s
@@ -30,6 +32,7 @@ ss-parser:
     expression: true
 
   flat:
+    enabled: true
     rate: 10m
     url: https://www.ss.com/ru/real-estate/flats/riga/sell/rss/
     timeout: 10s
@@ -38,6 +41,7 @@ ss-parser:
     expression: true
 
   home:
+    enabled: true
     rate: 10m
     url: https://www.ss.com/ru/real-estate/homes-summer-residences/riga/sell/rss/
     timeout: 10s

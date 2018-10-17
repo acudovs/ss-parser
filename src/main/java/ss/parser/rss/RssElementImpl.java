@@ -4,7 +4,8 @@ import lombok.Getter;
 import org.w3c.dom.Element;
 
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
+
+import static java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME;
 
 @Getter
 public abstract class RssElementImpl implements RssElement {
@@ -21,11 +22,11 @@ public abstract class RssElementImpl implements RssElement {
     }
 
     protected static String formatDate(ZonedDateTime date) {
-        return DateTimeFormatter.RFC_1123_DATE_TIME.format(date);
+        return RFC_1123_DATE_TIME.format(date);
     }
 
     protected static ZonedDateTime parseDate(String date) {
-        return ZonedDateTime.parse(date, DateTimeFormatter.RFC_1123_DATE_TIME);
+        return ZonedDateTime.parse(date, RFC_1123_DATE_TIME);
     }
 
     protected String getContent(String tag) {
