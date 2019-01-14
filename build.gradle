@@ -1,13 +1,13 @@
 plugins {
-    id 'com.google.cloud.tools.jib' version '0.9.13'
-    id 'org.springframework.boot' version '2.1.0.RELEASE'
+    id 'com.google.cloud.tools.jib' version '0.10.1'
+    id 'org.springframework.boot' version '2.1.2.RELEASE'
 }
 
 apply plugin: 'idea'
 apply plugin: 'java'
 apply plugin: 'io.spring.dependency-management'
 
-version = '1.6'
+version = '1.7'
 
 sourceCompatibility = 1.8
 
