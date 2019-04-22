@@ -1,19 +1,19 @@
 plugins {
-    id 'com.google.cloud.tools.jib' version '0.10.1'
-    id 'org.springframework.boot' version '2.1.2.RELEASE'
+    id 'com.google.cloud.tools.jib' version '1.1.2'
+    id 'org.springframework.boot' version '2.1.4.RELEASE'
 }
 
 apply plugin: 'idea'
 apply plugin: 'java'
 apply plugin: 'io.spring.dependency-management'
 
-version = '1.7'
+version = '1.8'
 
-sourceCompatibility = 1.8
+sourceCompatibility = 11
 
 jib {
     from {
-        image = 'gcr.io/distroless/java'
+        image = 'gcr.io/distroless/java:11'
     }
     to {
         image = rootProject.name + ':' + version
@@ -24,8 +24,7 @@ jib {
                 '-Duser.timezone=Europe/Riga',
                 '-Xms64m',
                 '-Xmx64m',
-                '-XX:+PrintGCDateStamps',
-                '-XX:+PrintGCDetails'
+                '-verbose:gc'
         ]
         useCurrentTimestamp = true
     }
