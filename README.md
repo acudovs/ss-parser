@@ -24,7 +24,7 @@ Spring Boot lets you [customize configuration](https://docs.spring.io/spring-boo
 Create environment variables file `ss-parser.env`. To avoid blocking, select the [most common user agent](https://techblog.willshouse.com/2012/01/03/most-common-user-agents/). Do not forget to convert the values from yaml or properties format into [environment variables format](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html#boot-features-external-config-relaxed-binding).
 
 ```shell
-HTTP_AGENT=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36
+HTTP_AGENT=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36
 
 SPRING_MAIL_HOST=smtp.gmail.com
 SPRING_MAIL_USERNAME=user@gmail.com
