@@ -1,6 +1,6 @@
 plugins {
-    id 'com.google.cloud.tools.jib' version '1.2.0'
-    id 'org.springframework.boot' version '2.1.5.RELEASE'
+    id 'com.google.cloud.tools.jib' version '1.5.1'
+    id 'org.springframework.boot' version '2.1.8.RELEASE'
 }
 
 apply plugin: 'idea'
@@ -19,6 +19,7 @@ jib {
         image = rootProject.name + ':' + version
     }
     container {
+        creationTime = 'USE_CURRENT_TIMESTAMP'
         jvmFlags = [
                 '-Dfile.encoding=UTF-8',
                 '-Duser.timezone=Europe/Riga',
@@ -26,7 +27,6 @@ jib {
                 '-Xmx64m',
                 '-verbose:gc'
         ]
-        useCurrentTimestamp = true
     }
 }
 
