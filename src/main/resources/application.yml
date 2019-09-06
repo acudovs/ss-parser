@@ -36,8 +36,8 @@ ss-parser:
     rate: 10m
     url: https://www.ss.com/ru/real-estate/flats/riga/sell/rss/
     timeout: 10s
-    regex: "(?s:Район: (<b>)+(?<region>.+?)<br>(?<address>.+?)(</b>)+.+?(К\\.: (<b>)+(?<rooms>\\d+).+?)?m2: (<b>)+(?<area>\\d+)(</b>)+<br/>Этаж: (<b>)+(?<floor>-?\\d+)(</b>)+<br/>Серия: (<b>)+(?<series>.+?)(</b>)+<br/>: (<b>)+(?<ppm2>[\\d,]+).+?Цена: (<b>)+(?<price>[\\d,]+)(</b>)?  €</b><br/>)"
-    replace: "Район: <b>${region}</b><br/>Адрес: <b>${address}</b><br/>Комнат: <b>${rooms}</b><br/>Площадь: <b>${area} м2</b><br/>Этаж: <b>${floor}</b><br/>Серия: <b>${series}</b><br/>Цена за м2: <b>${ppm2} €</b><br/>Цена: <b>${price} €</b>"
+    regex: "(?s:Район: (<b>)+(?<region>.+?)<br>(?<address>.+?)(</b>)+.+?(К\\.: (<b>)+(?<rooms>\\d+).+?)?m2: (<b>)+(?<area>\\d+)(</b>)+<br/>Этаж: (<b>)+(?<floor>-?\\d+)/(?<floors>-?\\d+)(</b>)+<br/>Серия: (<b>)+(?<series>.+?)(</b>)+<br/>: (<b>)+(?<ppm2>[\\d,]+).+?Цена: (<b>)+(?<price>[\\d,]+)(</b>)?  €</b><br/>)"
+    replace: "Район: <b>${region}</b><br/>Адрес: <b>${address}</b><br/>Комнат: <b>${rooms}</b><br/>Площадь: <b>${area} м2</b><br/>Этаж: <b>${floor}/${floors}</b><br/>Серия: <b>${series}</b><br/>Цена за м2: <b>${ppm2} €</b><br/>Цена: <b>${price} €</b>"
     expression: true
 
   home:

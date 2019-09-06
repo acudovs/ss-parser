@@ -20,6 +20,7 @@ class FlatConfig extends AdConfigImpl {
                 parseInt(matcher.group("rooms")),
                 parseInt(matcher.group("area")),
                 parseInt(matcher.group("floor")),
+                parseInt(matcher.group("floors")),
                 parseInt(matcher.group("price")),
                 parseInt(matcher.group("ppm2")));
     }
