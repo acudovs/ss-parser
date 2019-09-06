@@ -8,6 +8,7 @@ EnvironmentFile=/etc/sysconfig/ss-parser@%i.env
 ExecStart=/usr/bin/docker run --env-file /etc/sysconfig/ss-parser@%i.env --name ss-parser-%i --rm --user nobody ss-parser:${VERSION}
 ExecStop=/usr/bin/docker stop ss-parser-%i
 Restart=on-failure
+SuccessExitStatus=143
 
 [Install]
 WantedBy=multi-user.target
