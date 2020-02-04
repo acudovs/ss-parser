@@ -80,9 +80,9 @@ public class RssChannelImpl extends RssElementImpl implements RssChannel {
                 node.setTextContent(pattern.matcher(description).replaceAll(adConfig.getReplace()));
                 ads.add(adConfig.newAd(item, matcher));
             } else {
-                String text = "RSS item description does not match regex:\r\n" + description;
-                log.error(text);
-                mailService.queue(getClass().getName(), text, false);
+                String message = "RSS item description does not match regex:\r\n" + description;
+                log.error(message);
+                mailService.sendError(getClass().getName(), message);
             }
         }
         return Collections.unmodifiableList(ads);

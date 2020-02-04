@@ -45,8 +45,8 @@ public abstract class AdTask implements SchedulerTask {
         log.debug("Matched {} ads in the {}: {}", ads.size(), rssChannel, ads);
 
         if (!ads.isEmpty()) {
-            String text = ads.stream().map(Ad::toHtml).collect(Collectors.joining("<br/>"));
-            mailService.queue(getClass().getName(), text, true);
+            String message = ads.stream().map(Ad::toHtml).collect(Collectors.joining("<br/>"));
+            mailService.sendHtml(getClass().getName(), message);
         }
 
         lastBuildDate = rssChannel.getLastBuildDate();

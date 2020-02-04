@@ -7,6 +7,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 
+import javax.mail.internet.InternetAddress;
 import java.time.Duration;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -15,18 +16,19 @@ import java.util.concurrent.ConcurrentHashMap;
 @RequiredArgsConstructor
 class MailServiceImpl implements MailService {
     private final Logger log = LoggerFactory.getLogger(getClass());
-    private final Map<String, Message> mailQueue = new ConcurrentHashMap<>();
+    private final Map<String, String> errorQueue = new ConcurrentHashMap<>();
+    private final Map<String, String> messageQueue = new ConcurrentHashMap<>();
     private final MailConfig mailConfig;
     private final JavaMailSender mailSender;
 
     @Override
-    public void queue(String caller, String text, boolean html) {
-        if (mailConfig.isEnabled()) {
-            mailQueue.merge(caller, new Message(text, html), Message::merge);
-            log.info("Message to {} queued by {}", mailConfig.getTo(), caller);
-        } else {
-            log.warn("Message to {} not queued by {}: mail service is disabled", mailConfig.getTo(), caller);
-        }
+    public void sendError(String sender, String message) {
+        addToQueue(errorQueue, sender, message, "\r\n");
+    }
+
+    @Override
+    public void sendHtml(String sender, String message) {
+        addToQueue(messageQueue, sender, message, "<br/>");
     }
 
     @Override
@@ -41,30 +43,30 @@ class MailServiceImpl implements MailService {
 
     @Override
     public void run() {
-        for (String caller : mailQueue.keySet()) {
-            send(mailQueue.remove(caller));
-            log.info("Message to {} sent by {}", mailConfig.getTo(), caller);
+        send(errorQueue, mailConfig.getAdmin(), false);
+        send(messageQueue, mailConfig.getTo(), true);
+
+    }
+
+    private void addToQueue(Map<String, String> queue, String sender, String message, String delimiter) {
+        if (isEnabled()) {
+            queue.merge(sender, message, (message1, message2) -> message1 + delimiter + message2);
+            log.info("Message queued by {}", sender);
+        } else {
+            log.warn("Message not queued by {}: mail service is disabled", sender);
         }
     }
 
-    private void send(Message message) {
-        mailSender.send(mimeMessage -> {
-            MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
-            messageHelper.setFrom(mailConfig.getFrom());
-            messageHelper.setTo(mailConfig.getTo());
-            messageHelper.setSubject(mailConfig.getSubject());
-            messageHelper.setText(message.text, message.html);
-        });
-    }
-
-    @RequiredArgsConstructor
-    private static class Message {
-        final String text;
-        final boolean html;
-
-        Message merge(Message message) {
-            String delimiter = message.html ? "<br/>" : "\r\n";
-            return new Message(text + delimiter + message.text, message.html);
+    private void send(Map<String, String> queue, InternetAddress[] to, boolean html) {
+        for (String sender : queue.keySet()) {
+            mailSender.send(mimeMessage -> {
+                MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
+                messageHelper.setFrom(mailConfig.getFrom());
+                messageHelper.setTo(to);
+                messageHelper.setSubject(mailConfig.getSubject());
+                messageHelper.setText(queue.remove(sender), html);
+            });
+            log.info("Message to {} sent by {}", mailConfig.getTo(), sender);
         }
     }
 }

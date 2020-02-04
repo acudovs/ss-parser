@@ -3,5 +3,7 @@ package ss.parser.mail;
 import ss.parser.scheduler.SchedulerTask;
 
 public interface MailService extends SchedulerTask {
-    void queue(String caller, String text, boolean html);
+    void sendError(String sender, String message);
+
+    void sendHtml(String sender, String message);
 }

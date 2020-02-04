@@ -42,7 +42,7 @@ class Scheduler implements Runnable {
         ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
         scheduler.setErrorHandler(t -> {
             log.error("Unexpected error occurred in scheduled task", t);
-            mailService.queue(getClass().getName(), ExceptionUtils.getStackTrace(t), false);
+            mailService.sendError(getClass().getName(), ExceptionUtils.getStackTrace(t));
         });
         scheduler.setPoolSize(getPoolSize());
         scheduler.initialize();

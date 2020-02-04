@@ -12,5 +12,7 @@ interface MailConfig {
 
     InternetAddress[] getTo();
 
+    InternetAddress[] getAdmin();
+
     String getSubject();
 }

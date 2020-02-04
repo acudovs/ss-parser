@@ -11,7 +11,7 @@ For a quick start, use the following instructions
 git clone https://github.com/AlekseyChudov/ss-parser.git
 cd ss-parser
 ./gradlew jibDockerBuild
-docker run -it --rm ss-parser:1.10
+docker run -it --rm ss-parser:1.11
 ```
 
 Congratulations! You have just compiled the SS.COM Parser Java application, packed it into the Docker image and ran the Docker container. You can now lean back and enjoy the logs :)
@@ -24,7 +24,7 @@ Spring Boot lets you [customize configuration](https://docs.spring.io/spring-boo
 Create environment variables file `ss-parser.env`. To avoid blocking, select the [most common user agent](https://techblog.willshouse.com/2012/01/03/most-common-user-agents/). Do not forget to convert the values from yaml or properties format into [environment variables format](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html#boot-features-external-config-relaxed-binding).
 
 ```shell
-HTTP_AGENT=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36
+HTTP_AGENT=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36
 
 SPRING_MAIL_HOST=smtp.gmail.com
 SPRING_MAIL_USERNAME=user@gmail.com
@@ -44,13 +44,13 @@ SS_PARSER_HOME_EXPRESSION=region matches 'Дарзциемс|Плявниеки|
 Then run the Docker container with the new configuration file.
 
 ```shell
-docker run -it --rm --env-file ss-parser.env ss-parser:1.10
+docker run -it --rm --env-file ss-parser.env ss-parser:1.11
 ```
 
 Once you are satisfied with the filter and configuration, just run the Docker container in the background.
 
 ```shell
-docker run -d --rm --env-file ss-parser.env ss-parser:1.10
+docker run -d --rm --env-file ss-parser.env ss-parser:1.11
 ```
 
 If you are not familiar with Docker and containers, there are many tutorials like [A Docker Tutorial for Beginners](https://docker-curriculum.com/).
