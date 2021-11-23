@@ -5,8 +5,8 @@ import ss.parser.ad.AdTask;
 import ss.parser.mail.MailService;
 
 @Component
-class FlatTask extends AdTask {
-    FlatTask(FlatConfig flatConfig, MailService mailService) {
-        super(flatConfig, mailService);
+class FlatSellTask extends AdTask {
+    FlatSellTask(FlatSellConfig flatSellConfig, MailService mailService) {
+        super(flatSellConfig, mailService);
     }
 }

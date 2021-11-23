@@ -11,7 +11,7 @@ For a quick start, use the following instructions
 git clone https://github.com/AlekseyChudov/ss-parser.git
 cd ss-parser
 ./gradlew jibDockerBuild
-docker run -it --rm ss-parser:1.11
+docker run -it --rm ss-parser:1.12
 ```
 
 Congratulations! You have just compiled the SS.COM Parser Java application, packed it into the Docker image and ran the Docker container. You can now lean back and enjoy the logs :)
@@ -44,13 +44,13 @@ SS_PARSER_HOME_EXPRESSION=region matches 'Дарзциемс|Плявниеки|
 Then run the Docker container with the new configuration file.
 
 ```shell
-docker run -it --rm --env-file ss-parser.env ss-parser:1.11
+docker run -it --rm --env-file ss-parser.env ss-parser:1.12
 ```
 
 Once you are satisfied with the filter and configuration, just run the Docker container in the background.
 
 ```shell
-docker run -d --rm --env-file ss-parser.env ss-parser:1.11
+docker run -d --rm --env-file ss-parser.env ss-parser:1.12
 ```
 
 If you are not familiar with Docker and containers, there are many tutorials like [A Docker Tutorial for Beginners](https://docker-curriculum.com/).

@@ -31,12 +31,21 @@ ss-parser:
     replace: "Марка: <b>${mark}</b><br/>Модель: <b>${model}</b><br/>Год: <b>${year}</b><br/>Двигатель: <b>${engine}</b><br/>Пробег: <b>${run} тыс.</b><br/>Цена: <b>${price} €</b>"
     expression: true
 
-  flat:
+  flat-sell:
     enabled: true
     rate: 10m
     url: https://www.ss.com/ru/real-estate/flats/riga/sell/rss/
     timeout: 10s
-    regex: "(?s:Район: (<b>)+(?<region>.+?)<br>(?<address>.+?)(</b>)+.+?(К\\.: (<b>)+(?<rooms>\\d+).+?)?m2: (<b>)+(?<area>\\d+)(</b>)+<br/>Этаж: (<b>)+(?<floor>-?\\d+)(\\.\\d+)?/(?<floors>-?\\d+)(</b>)+<br/>Серия: (<b>)+(?<series>.+?)(</b>)+<br/>: (<b>)+(?<ppm2>[\\d,]+).+?Цена: (<b>)+(?<price>[\\d,]+)(</b>)?  €</b><br/>)"
+    regex: "(?s:Район: (<b>)+(?<region>.+?)<br>(?<address>.+?)(</b>)+.+?(К\\.: (<b>)+(?<rooms>\\d+).+?)?m2: (<b>)+(?<area>\\d+)(</b>)+<br/>Этаж: (<b>)+(?<floor>-?\\d+)(\\.\\d+)?/(?<floors>-?\\d+)(</b>)+<br/>Серия: (<b>)+(?<series>.+?)(</b>)+<br/>: (<b>)+(?<ppm2>[\\d,]+).+?Цена: (<b>)+(?<price>[\\d,]+)(</b>)?  €)"
+    replace: "Район: <b>${region}</b><br/>Адрес: <b>${address}</b><br/>Комнат: <b>${rooms}</b><br/>Площадь: <b>${area} м2</b><br/>Этаж: <b>${floor}/${floors}</b><br/>Серия: <b>${series}</b><br/>Цена за м2: <b>${ppm2} €</b><br/>Цена: <b>${price} €</b>"
+    expression: true
+
+  flat-rent:
+    enabled: true
+    rate: 10m
+    url: https://www.ss.com/ru/real-estate/flats/riga/hand_over/rss/
+    timeout: 10s
+    regex: "(?s:Район: (<b>)+(?<region>.+?)<br>(?<address>.+?)(</b>)+.+?(К\\.: (<b>)+(?<rooms>\\d+).+?)?m2: (<b>)+(?<area>\\d+)(</b>)+<br/>Этаж: (<b>)+(?<floor>-?\\d+)(\\.\\d+)?/(?<floors>-?\\d+)(</b>)+<br/>Серия: (<b>)+(?<series>.+?)(</b>)+<br/>: (<b>)+(?<ppm2>[\\d,]+).+?Цена: (<b>)+(?<price>[\\d,]+)(</b>)?  €)"
     replace: "Район: <b>${region}</b><br/>Адрес: <b>${address}</b><br/>Комнат: <b>${rooms}</b><br/>Площадь: <b>${area} м2</b><br/>Этаж: <b>${floor}/${floors}</b><br/>Серия: <b>${series}</b><br/>Цена за м2: <b>${ppm2} €</b><br/>Цена: <b>${price} €</b>"
     expression: true
 
