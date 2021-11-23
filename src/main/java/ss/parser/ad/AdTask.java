@@ -55,7 +55,7 @@ public abstract class AdTask implements SchedulerTask {
     private List<Ad> filter(List<Ad> ads) {
         return ads.stream()
                 .filter(ad -> ad.getPubDate().isAfter(lastBuildDate))
-                .filter(ad -> (boolean) adConfig.getExpression().getValue(ad))
+                .filter(ad -> (Boolean) adConfig.getExpression().getValue(ad))
                 .collect(Collectors.toList());
     }
 }

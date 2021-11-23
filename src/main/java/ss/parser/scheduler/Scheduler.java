@@ -27,7 +27,7 @@ import static java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME;
 @RequiredArgsConstructor
 class Scheduler implements Runnable {
     private static final Logger log = LoggerFactory.getLogger(Scheduler.class);
-    private final Map<SchedulerTask, Pair<ScheduledFuture, Instant>> taskHistory = new ConcurrentHashMap<>();
+    private final Map<SchedulerTask, Pair<ScheduledFuture<?>, Instant>> taskHistory = new ConcurrentHashMap<>();
     private final SchedulerConfig schedulerConfig;
     private final List<SchedulerTask> schedulerTasks;
     private final MailService mailService;
@@ -60,7 +60,7 @@ class Scheduler implements Runnable {
             if (task.isEnabled() && isSchedule(task, now)) {
                 Instant nextRun = getNextRun(task.getRate(), now);
                 log.info("Schedule task {} on {}", task, formatDate(nextRun));
-                ScheduledFuture future = taskScheduler.schedule(task, nextRun);
+                ScheduledFuture<?> future = taskScheduler.schedule(task, nextRun);
                 taskHistory.put(task, Pair.of(future, nextRun));
             }
         }
@@ -87,8 +87,8 @@ class Scheduler implements Runnable {
         if (!taskHistory.containsKey(task))
             return true;
 
-        Pair<ScheduledFuture, Instant> pair = taskHistory.get(task);
-        ScheduledFuture future = pair.getLeft();
+        Pair<ScheduledFuture<?>, Instant> pair = taskHistory.get(task);
+        ScheduledFuture<?> future = pair.getLeft();
         Instant lastRun = pair.getRight();
         Duration rate = schedulerConfig.isRandomize() ? task.getRate().dividedBy(2) : task.getRate();
 
