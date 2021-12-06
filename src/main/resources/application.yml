@@ -23,7 +23,7 @@ ss-parser:
     subject: Новые объекты, отвечающие вашему поиску SS.COM
 
   car:
-    enabled: true
+    enabled: false
     rate: 10m
     url: https://www.ss.com/ru/transport/cars/sell/rss/
     timeout: 10s
@@ -32,7 +32,7 @@ ss-parser:
     expression: true
 
   flat-sell:
-    enabled: true
+    enabled: false
     rate: 10m
     url: https://www.ss.com/ru/real-estate/flats/riga/sell/rss/
     timeout: 10s
@@ -41,7 +41,7 @@ ss-parser:
     expression: true
 
   flat-rent:
-    enabled: true
+    enabled: false
     rate: 10m
     url: https://www.ss.com/ru/real-estate/flats/riga/hand_over/rss/
     timeout: 10s
@@ -50,7 +50,7 @@ ss-parser:
     expression: true
 
   home:
-    enabled: true
+    enabled: false
     rate: 10m
     url: https://www.ss.com/ru/real-estate/homes-summer-residences/riga/sell/rss/
     timeout: 10s

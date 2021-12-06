@@ -24,7 +24,7 @@ Spring Boot lets you [customize configuration](https://docs.spring.io/spring-boo
 Create environment variables file `ss-parser.env`. To avoid blocking, select the [most common user agent](https://techblog.willshouse.com/2012/01/03/most-common-user-agents/). Do not forget to convert the values from yaml or properties format into [environment variables format](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html#boot-features-external-config-relaxed-binding).
 
 ```shell
-HTTP_AGENT=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36
+HTTP_AGENT=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36
 
 SPRING_MAIL_HOST=smtp.gmail.com
 SPRING_MAIL_USERNAME=user@gmail.com
@@ -34,10 +34,13 @@ SS_PARSER_MAIL_ENABLED=true
 SS_PARSER_MAIL_FROM=user@gmail.com
 SS_PARSER_MAIL_TO=user@gmail.com
 
-SS_PARSER_CAR_EXPRESSION=mark == 'Lexus' and year >= 2013
+SS_PARSER_CAR_ENABLED=true
+SS_PARSER_CAR_EXPRESSION=mark == 'Lexus' and year >= 2016
 
+SS_PARSER_FLAT_ENABLED=true
 SS_PARSER_FLAT_EXPRESSION=region matches 'Плявниеки|Пурвциемс' and rooms > 3 and area > 100
 
+SS_PARSER_HOME_ENABLED=true
 SS_PARSER_HOME_EXPRESSION=region matches 'Дарзциемс|Плявниеки|Пурвциемс|Межциемс' and area > 200 and land > 600
 ```
 
