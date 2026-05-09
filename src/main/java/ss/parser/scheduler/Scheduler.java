@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Service;
-import ss.parser.mail.MailService;
+import ss.parser.notification.NotificationService;
 
 import javax.annotation.PostConstruct;
 import java.time.Duration;
@@ -30,7 +30,7 @@ class Scheduler implements Runnable {
     private final Map<SchedulerTask, Pair<ScheduledFuture<?>, Instant>> taskHistory = new ConcurrentHashMap<>();
     private final SchedulerConfig schedulerConfig;
     private final List<SchedulerTask> schedulerTasks;
-    private final MailService mailService;
+    private final NotificationService notificationService;
     private TaskScheduler taskScheduler;
 
     private static String formatDate(Instant date) {
@@ -42,7 +42,7 @@ class Scheduler implements Runnable {
         ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
         scheduler.setErrorHandler(t -> {
             log.error("Unexpected error occurred in scheduled task", t);
-            mailService.sendError(getClass().getName(), ExceptionUtils.getStackTrace(t));
+            notificationService.sendError(getClass().getName(), ExceptionUtils.getStackTrace(t));
         });
         scheduler.setPoolSize(getPoolSize());
         scheduler.initialize();

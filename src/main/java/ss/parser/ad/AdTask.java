@@ -3,7 +3,7 @@ package ss.parser.ad;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ss.parser.mail.MailService;
+import ss.parser.notification.NotificationService;
 import ss.parser.rss.RssChannel;
 import ss.parser.rss.RssChannelImpl;
 import ss.parser.scheduler.SchedulerTask;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public abstract class AdTask implements SchedulerTask {
     private final Logger log = LoggerFactory.getLogger(getClass());
     private final AdConfig adConfig;
-    private final MailService mailService;
+    private final NotificationService notificationService;
     private ZonedDateTime lastBuildDate = ZonedDateTime.ofInstant(Instant.EPOCH, ZoneId.systemDefault());
 
     @Override
@@ -34,7 +34,7 @@ public abstract class AdTask implements SchedulerTask {
 
     @Override
     public void run() {
-        RssChannel rssChannel = new RssChannelImpl(adConfig, mailService);
+        RssChannel rssChannel = new RssChannelImpl(adConfig, notificationService);
         if (!rssChannel.getLastBuildDate().isAfter(lastBuildDate)) {
             log.info("{} is already parsed on {}", rssChannel, rssChannel.getLastBuildDate());
             return;
@@ -43,12 +43,7 @@ public abstract class AdTask implements SchedulerTask {
 
         List<Ad> ads = filter(rssChannel.getAds());
         log.debug("Matched {} ads in the {}: {}", ads.size(), rssChannel, ads);
-
-        if (!ads.isEmpty()) {
-            String message = ads.stream().map(Ad::toHtml).collect(Collectors.joining("<br/>"));
-            mailService.sendHtml(getClass().getName(), message);
-        }
-
+        ads.forEach(ad -> notificationService.sendAd(getClass().getName(), ad));
         lastBuildDate = rssChannel.getLastBuildDate();
     }
 

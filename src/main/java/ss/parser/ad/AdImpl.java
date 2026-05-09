@@ -14,9 +14,4 @@ public abstract class AdImpl extends RssElementImpl implements Ad {
         super(element);
         pubDate = parseDate(getContent("pubDate"));
     }
-
-    @Override
-    public String toHtml() {
-        return "<p>" + getTitle() + "</p><p>" + formatDate(pubDate) + "</p>" + getDescription();
-    }
 }

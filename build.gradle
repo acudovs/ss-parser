@@ -7,14 +7,14 @@ apply plugin: 'idea'
 apply plugin: 'java'
 apply plugin: 'io.spring.dependency-management'
 
-version = '1.12'
+version = '1.13'
 
 sourceCompatibility = 17
 targetCompatibility = 17
 
 jib {
     from {
-        image = 'docker.io/library/openjdk:17'
+        image = 'docker.io/library/openjdk:17-ea'
     }
     to {
         image = rootProject.name + ':' + version
@@ -51,8 +51,25 @@ dependencies {
     compileOnly 'org.springframework.boot:spring-boot-configuration-processor'
     compileOnly 'org.springframework.boot:spring-boot-loader'
 
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
     implementation 'org.apache.commons:commons-lang3'
+    implementation 'org.jsoup:jsoup:1.22.2'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+['car', 'flat-sell', 'flat-rent', 'home'].each { adType ->
+    tasks.register("testRegex-${adType}", JavaExec) {
+        dependsOn testClasses
+        workingDir = projectDir
+        classpath = sourceSets.test.runtimeClasspath
+        mainClass = 'ss.parser.RssRegexTest'
+        def regex = findProperty('regex')
+        args = regex ? [adType, regex] : [adType]
+    }
+}
+
+tasks.register('testRegex') {
+    dependsOn tasks.matching { it.name.startsWith('testRegex-') }
 }

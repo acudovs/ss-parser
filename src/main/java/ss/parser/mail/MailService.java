@@ -1,9 +1,6 @@
 package ss.parser.mail;
 
+import ss.parser.notification.NotificationChannel;
 import ss.parser.scheduler.SchedulerTask;
 
-public interface MailService extends SchedulerTask {
-    void sendError(String sender, String message);
-
-    void sendHtml(String sender, String message);
-}
+public interface MailService extends NotificationChannel, SchedulerTask {}

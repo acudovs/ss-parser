@@ -9,7 +9,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import ss.parser.ad.Ad;
 import ss.parser.ad.AdConfig;
-import ss.parser.mail.MailService;
+import ss.parser.notification.NotificationService;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -27,16 +27,16 @@ import java.util.regex.Pattern;
 public class RssChannelImpl extends RssElementImpl implements RssChannel {
     private final Logger log = LoggerFactory.getLogger(getClass());
     private final AdConfig adConfig;
-    private final MailService mailService;
+    private final NotificationService notificationService;
     private final Pattern pattern;
     private final ZonedDateTime lastBuildDate;
     private final int ttl;
     private final List<Ad> ads;
 
-    public RssChannelImpl(AdConfig adConfig, MailService mailService) {
+    public RssChannelImpl(AdConfig adConfig, NotificationService notificationService) {
         super(newElement(adConfig.getUrl(), adConfig.getTimeout()));
         this.adConfig = adConfig;
-        this.mailService = mailService;
+        this.notificationService = notificationService;
         pattern = Pattern.compile(adConfig.getRegex());
         lastBuildDate = parseDate(getContent("lastBuildDate"));
         ttl = Integer.parseInt(getContent("ttl"));
@@ -82,7 +82,7 @@ public class RssChannelImpl extends RssElementImpl implements RssChannel {
             } else {
                 String message = "RSS item description does not match regex:\r\n" + description;
                 log.error(message);
-                mailService.sendError(getClass().getName(), message);
+                notificationService.sendError(getClass().getName(), message);
             }
         }
         return Collections.unmodifiableList(ads);
