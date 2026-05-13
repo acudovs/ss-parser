@@ -1,4 +1,4 @@
-package ss.parser.mail;
+package ss.parser.notification.mail;
 
 import ss.parser.notification.NotificationChannel;
 

@@ -21,6 +21,7 @@ ss-parser:
     working-hours:
       start: "00:00"
       end: "23:59"
+    max-message-size: 100000
     from: user@localhost
     to: user@localhost
     subject: Новые объекты, отвечающие вашему поиску SS.COM
@@ -31,6 +32,7 @@ ss-parser:
     working-hours:
       start: "00:00"
       end: "23:59"
+    max-message-size: 4096
     bot-token: "0000000000:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
     chat-id: "0"
     timeout: 10s

@@ -1,4 +1,4 @@
-package ss.parser.telegram;
+package ss.parser.notification.telegram;
 
 import ss.parser.notification.NotificationChannel;
 

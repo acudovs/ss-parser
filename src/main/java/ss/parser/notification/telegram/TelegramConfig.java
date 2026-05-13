@@ -1,13 +1,12 @@
-package ss.parser.mail;
+package ss.parser.notification.telegram;
 
+import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.stereotype.Component;
-
-import jakarta.annotation.PostConstruct;
-import jakarta.mail.internet.InternetAddress;
+import ss.parser.notification.NotificationConfig;
 import ss.parser.notification.WorkingHours;
 
 import java.time.Duration;
@@ -15,21 +14,22 @@ import java.time.Duration;
 @Getter
 @Setter
 @Component
-@ConfigurationProperties("ss-parser.mail")
-class MailConfigImpl implements MailConfig {
+@ConfigurationProperties("ss-parser.telegram")
+class TelegramConfig implements NotificationConfig {
     private boolean enabled;
     private Duration rate;
     @NestedConfigurationProperty
     private WorkingHours workingHours;
-    private InternetAddress from;
-    private InternetAddress[] to;
-    private InternetAddress[] admin;
-    private String subject;
+    private int maxMessageSize;
+    private String botToken;
+    private String chatId;
+    private String adminChatId;
+    private Duration timeout;
 
     @PostConstruct
     private void init() {
-        if (admin == null) {
-            admin = new InternetAddress[]{to[0]};
+        if (adminChatId == null) {
+            adminChatId = chatId;
         }
     }
 }
