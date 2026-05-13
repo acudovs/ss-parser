@@ -3,10 +3,13 @@ package ss.parser.mail;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.stereotype.Component;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.mail.internet.InternetAddress;
+import ss.parser.notification.WorkingHours;
+
 import java.time.Duration;
 
 @Getter
@@ -16,6 +19,8 @@ import java.time.Duration;
 class MailConfigImpl implements MailConfig {
     private boolean enabled;
     private Duration rate;
+    @NestedConfigurationProperty
+    private WorkingHours workingHours;
     private InternetAddress from;
     private InternetAddress[] to;
     private InternetAddress[] admin;

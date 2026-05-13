@@ -1,3 +1,5 @@
 package ss.parser.notification;
 
-public interface NotificationChannel extends NotificationService {}
+import ss.parser.scheduler.SchedulerTask;
+
+public interface NotificationChannel extends NotificationService, SchedulerTask {}

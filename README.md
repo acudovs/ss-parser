@@ -12,7 +12,7 @@ For a quick start, use the following instructions
 git clone https://github.com/acudovs/ss-parser.git
 cd ss-parser
 ./gradlew jibDockerBuild
-docker run -it --rm ss-parser:1.14
+docker run -it --rm ss-parser:1.15
 ```
 
 Congratulations! You have just compiled the SS.COM Parser Java application, packed it into the Docker image and ran the
@@ -63,13 +63,13 @@ SS_PARSER_HOME_EXPRESSION=region matches 'Дарзциемс|Плявниеки|
 Then run the Docker container with the new configuration file.
 
 ```shell
-docker run -it --rm --env-file ss-parser.env ss-parser:1.14
+docker run -it --rm --env-file ss-parser.env ss-parser:1.15
 ```
 
 Once you are satisfied with the filter and configuration, just run the Docker container in the background.
 
 ```shell
-docker run -d --rm --env-file ss-parser.env ss-parser:1.14
+docker run -d --rm --env-file ss-parser.env ss-parser:1.15
 ```
 
 ## Telegram Setup
@@ -95,3 +95,22 @@ To receive notifications via Telegram:
 
 4. Optionally, set `SS_PARSER_TELEGRAM_ADMIN_CHAT_ID` to a different chat ID to route error messages there. If omitted,
    errors go to the same chat as ads.
+
+## Working Hours
+
+Both mail and Telegram channels support a configurable delivery window. Notifications that arrive outside the window are
+held in memory and delivered on the next flush that falls within the window.
+
+Set the window via environment variables (times in `HH:mm` format, local timezone):
+
+```shell
+SS_PARSER_MAIL_WORKING_HOURS_START=09:00
+SS_PARSER_MAIL_WORKING_HOURS_END=21:00
+
+SS_PARSER_TELEGRAM_WORKING_HOURS_START=09:00
+SS_PARSER_TELEGRAM_WORKING_HOURS_END=21:00
+```
+
+If neither variable is set for a channel, that channel delivers at any time.
+
+Overnight windows are supported: setting `START=22:00` and `END=08:00` delivers between 22:00 and 08:00.

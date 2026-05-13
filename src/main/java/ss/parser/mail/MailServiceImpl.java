@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 import ss.parser.ad.Ad;
 
 import jakarta.mail.internet.InternetAddress;
+import ss.parser.notification.WorkingHours;
+
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -54,8 +56,13 @@ class MailServiceImpl implements MailService {
 
     @Override
     public void run() {
-        flush(errorsQueue, mailConfig.getAdmin(), false);
-        flush(messagesQueue, mailConfig.getTo(), true);
+        WorkingHours workingHours = mailConfig.getWorkingHours();
+        if (workingHours.isActive()) {
+            flush(errorsQueue, mailConfig.getAdmin(), false);
+            flush(messagesQueue, mailConfig.getTo(), true);
+        } else {
+            log.debug("Outside working hours {}-{}, skipping", workingHours.getStart(), workingHours.getEnd());
+        }
     }
 
     private void enqueue(Map<String, List<String>> queue, String sender, String message) {

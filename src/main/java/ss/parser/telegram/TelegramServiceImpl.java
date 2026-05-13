@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import ss.parser.ad.Ad;
+import ss.parser.notification.WorkingHours;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -69,8 +70,13 @@ class TelegramServiceImpl implements TelegramService {
 
     @Override
     public void run() {
-        flush(errorsQueue, telegramConfig.getAdminChatId(), false);
-        flush(messagesQueue, telegramConfig.getChatId(), true);
+        WorkingHours workingHours = telegramConfig.getWorkingHours();
+        if (workingHours.isActive()) {
+            flush(errorsQueue, telegramConfig.getAdminChatId(), false);
+            flush(messagesQueue, telegramConfig.getChatId(), true);
+        } else {
+            log.debug("Outside working hours {}-{}, skipping", workingHours.getStart(), workingHours.getEnd());
+        }
     }
 
     private void enqueue(Map<String, List<String>> queue, String sender, String message) {
