@@ -5,8 +5,8 @@ import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-import javax.mail.internet.InternetAddress;
+import jakarta.annotation.PostConstruct;
+import jakarta.mail.internet.InternetAddress;
 import java.time.Duration;
 
 @Getter
