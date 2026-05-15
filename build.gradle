@@ -7,28 +7,45 @@ apply plugin: 'idea'
 apply plugin: 'java'
 apply plugin: 'io.spring.dependency-management'
 
-version = '1.16'
+version = '1.17'
+
+def defaultJre = 25
+def arch = project.findProperty('arch')
+def jreByArch = ['arm': 17]
+def jre = jreByArch.getOrDefault(arch, defaultJre)
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(25)
+        languageVersion = JavaLanguageVersion.of(defaultJre)
     }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    if (jre < defaultJre) options.release = jre
 }
 
 jib {
     from {
-        image = 'docker.io/library/openjdk:25-ea'
+        image = "docker.io/library/eclipse-temurin:${jre}-jre"
+        if (arch) {
+            platforms {
+                platform {
+                    os = 'linux'
+                    architecture = arch
+                }
+            }
+        }
     }
     to {
-        image = rootProject.name + ':' + version
+        image = rootProject.name + ':' + version + (arch ? "-${arch}" : '')
     }
     container {
         creationTime = 'USE_CURRENT_TIMESTAMP'
         jvmFlags = [
                 '-Dfile.encoding=UTF-8',
                 '-Duser.timezone=Europe/Riga',
-                '-Xms64m',
-                '-Xmx64m',
+                '-Xms32m',
+                '-Xmx32m',
                 '-verbose:gc'
         ]
     }

@@ -45,7 +45,7 @@ public abstract class AbstractNotificationChannel implements NotificationChannel
     @Override
     public void run() {
         WorkingHours workingHours = getConfig().getWorkingHours();
-        if (workingHours.isActive()) {
+        if (workingHours == null || workingHours.isActive()) {
             flushQueues();
         } else {
             log.debug("Outside working hours {}-{}, skipping", workingHours.getStart(), workingHours.getEnd());

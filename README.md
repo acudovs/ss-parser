@@ -12,7 +12,7 @@ For a quick start, use the following instructions
 git clone https://github.com/acudovs/ss-parser.git
 cd ss-parser
 ./gradlew jibDockerBuild
-docker run -it --rm ss-parser:1.16
+docker run -it --rm ss-parser:1.17
 ```
 
 Congratulations! You have just compiled the SS.COM Parser Java application, packed it into the Docker image and ran the
@@ -63,13 +63,13 @@ SS_PARSER_HOME_EXPRESSION=region matches 'Дарзциемс|Плявниеки|
 Then run the Docker container with the new configuration file.
 
 ```shell
-docker run -it --rm --env-file ss-parser.env ss-parser:1.16
+docker run -it --rm --env-file ss-parser.env ss-parser:1.17
 ```
 
 Once you are satisfied with the filter and configuration, just run the Docker container in the background.
 
 ```shell
-docker run -d --rm --env-file ss-parser.env ss-parser:1.16
+docker run -d --rm --env-file ss-parser.env ss-parser:1.17
 ```
 
 ## Telegram Setup
@@ -114,3 +114,20 @@ SS_PARSER_TELEGRAM_WORKING_HOURS_END=21:00
 If neither variable is set for a channel, that channel delivers at any time.
 
 Overnight windows are supported: setting `START=22:00` and `END=08:00` delivers between 22:00 and 08:00.
+
+## Building for a Specific Architecture
+
+By default `./gradlew jibDockerBuild` builds for the host architecture using JRE 25. Pass `-Parch=<arch>` to target
+a different platform. The JRE version is selected automatically — ARM 32-bit uses JRE 17 (the last LTS with `arm/v7`
+support), everything else uses JRE 25. The image tag gets an `-<arch>` suffix.
+
+```shell
+# Host architecture, JRE 25
+./gradlew jibDockerBuild
+
+# ARM 32-bit, JRE 17
+./gradlew jibDockerBuild -Parch=arm
+
+# ARM 64-bit, JRE 25
+./gradlew jibDockerBuild -Parch=arm64
+```
