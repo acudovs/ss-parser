@@ -1,5 +1,6 @@
 package ss.parser.notification;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,6 +12,7 @@ public class WorkingHours {
     private LocalTime start;
     private LocalTime end;
 
+    @JsonIgnore
     public boolean isActive() {
         if (start == null || end == null) return true;
         LocalTime now = LocalTime.now();

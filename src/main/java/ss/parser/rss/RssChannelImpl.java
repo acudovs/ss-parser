@@ -24,7 +24,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Getter
-public class RssChannelImpl extends RssElementImpl implements RssChannel {
+public class RssChannelImpl extends AbstractRssElement implements RssChannel {
     private final Logger log = LoggerFactory.getLogger(getClass());
     private final AdConfig adConfig;
     private final NotificationService notificationService;

@@ -17,15 +17,15 @@ import java.time.Duration;
 @Component
 @ConfigurationProperties("ss-parser.mail")
 class MailConfig implements NotificationConfig {
-    private boolean enabled;
-    private Duration rate;
+    private volatile boolean enabled;
+    private volatile Duration rate;
     @NestedConfigurationProperty
-    private WorkingHours workingHours;
-    private int maxMessageSize;
-    private InternetAddress from;
-    private InternetAddress[] to;
-    private InternetAddress[] admin;
-    private String subject;
+    private volatile WorkingHours workingHours;
+    private volatile int maxMessageSize;
+    private volatile InternetAddress from;
+    private volatile InternetAddress[] to;
+    private volatile InternetAddress[] admin;
+    private volatile String subject;
 
     @PostConstruct
     private void init() {

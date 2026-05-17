@@ -7,12 +7,16 @@ apply plugin: 'idea'
 apply plugin: 'java'
 apply plugin: 'io.spring.dependency-management'
 
-version = '1.17'
+version = '1.18'
 
 def defaultJre = 25
-def arch = project.findProperty('arch')
+
 def jreByArch = ['arm': 17]
+def arch = project.findProperty('arch')
 def jre = jreByArch.getOrDefault(arch, defaultJre)
+
+def osName = System.getProperty('os.name').toLowerCase()
+def targetOs = project.findProperty('os') ?: (osName.contains('win') ? 'windows' : osName.contains('mac') ? 'darwin' : 'linux')
 
 java {
     toolchain {
@@ -30,7 +34,7 @@ jib {
         if (arch) {
             platforms {
                 platform {
-                    os = 'linux'
+                    os = targetOs
                     architecture = arch
                 }
             }
@@ -44,8 +48,8 @@ jib {
         jvmFlags = [
                 '-Dfile.encoding=UTF-8',
                 '-Duser.timezone=Europe/Riga',
-                '-Xms32m',
-                '-Xmx32m',
+                '-Xms64m',
+                '-Xmx64m',
                 '-verbose:gc'
         ]
     }
@@ -75,8 +79,14 @@ dependencies {
     implementation 'org.apache.commons:commons-lang3'
     implementation 'org.jsoup:jsoup:1.22.2'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+test {
+    failOnNoDiscoveredTests = false
 }
 
 ['car', 'flat-sell', 'flat-rent', 'home'].each { adType ->

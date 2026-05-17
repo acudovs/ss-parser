@@ -1,5 +1,6 @@
 package ss.parser.scheduler;
 
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -10,11 +11,11 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Service;
 import ss.parser.notification.NotificationService;
 
-import jakarta.annotation.PostConstruct;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -25,7 +26,7 @@ import static java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME;
 
 @Service
 @RequiredArgsConstructor
-class Scheduler implements Runnable {
+public class Scheduler implements Runnable {
     private static final Logger log = LoggerFactory.getLogger(Scheduler.class);
     private final Map<SchedulerTask, Pair<ScheduledFuture<?>, Instant>> taskHistory = new ConcurrentHashMap<>();
     private final SchedulerConfig schedulerConfig;
@@ -57,7 +58,7 @@ class Scheduler implements Runnable {
     public void run() {
         Instant now = Instant.now();
         for (SchedulerTask task : schedulerTasks) {
-            if (task.isEnabled() && isSchedule(task, now)) {
+            if (task.isEnabled() && shouldSchedule(task, now)) {
                 Instant nextRun = getNextRun(task.getRate(), now);
                 log.info("Schedule task {} on {}", task, formatDate(nextRun));
                 ScheduledFuture<?> future = taskScheduler.schedule(task, nextRun);
@@ -83,15 +84,28 @@ class Scheduler implements Runnable {
                 .orElseThrow(() -> new IllegalStateException("No enabled tasks"));
     }
 
-    private boolean isSchedule(SchedulerTask task, Instant now) {
+    private boolean shouldSchedule(SchedulerTask task, Instant now) {
         if (!taskHistory.containsKey(task))
             return true;
 
         Pair<ScheduledFuture<?>, Instant> pair = taskHistory.get(task);
         ScheduledFuture<?> future = pair.getLeft();
-        Instant lastRun = pair.getRight();
+        Instant nextRun = pair.getRight();
         Duration rate = schedulerConfig.isRandomize() ? task.getRate().dividedBy(2) : task.getRate();
 
-        return future.isDone() && lastRun.plusSeconds(rate.getSeconds()).isBefore(now);
+        return future.isDone() && nextRun.plusSeconds(rate.getSeconds()).isBefore(now);
+    }
+
+    public record TaskStatus(SchedulerTask task, Instant nextRun, boolean scheduled) {}
+
+    public List<TaskStatus> getTaskStatuses() {
+        List<TaskStatus> statuses = new ArrayList<>();
+        for (SchedulerTask task : schedulerTasks) {
+            Pair<ScheduledFuture<?>, Instant> pair = taskHistory.get(task);
+            Instant nextRun = pair != null ? pair.getRight() : null;
+            boolean scheduled = pair != null && !pair.getLeft().isDone();
+            statuses.add(new TaskStatus(task, nextRun, scheduled));
+        }
+        return statuses;
     }
 }

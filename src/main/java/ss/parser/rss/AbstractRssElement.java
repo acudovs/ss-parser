@@ -8,13 +8,13 @@ import java.time.ZonedDateTime;
 import static java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME;
 
 @Getter
-public abstract class RssElementImpl implements RssElement {
+public abstract class AbstractRssElement implements RssElement {
     private final Element element;
     private final String title;
     private final String link;
     private final String description;
 
-    protected RssElementImpl(Element element) {
+    protected AbstractRssElement(Element element) {
         this.element = element;
         title = getContent("title");
         link = getContent("link");

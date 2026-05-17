@@ -1,12 +1,12 @@
 package ss.parser.ad.flat;
 
 import org.w3c.dom.Element;
+import ss.parser.ad.AbstractAdConfig;
 import ss.parser.ad.Ad;
-import ss.parser.ad.AdConfigImpl;
 
 import java.util.regex.Matcher;
 
-abstract class FlatConfig extends AdConfigImpl {
+abstract class AbstractFlatConfig extends AbstractAdConfig {
     @Override
     public Ad newAd(Element element, Matcher matcher) {
         return new Flat(element,

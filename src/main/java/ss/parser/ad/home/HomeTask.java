@@ -1,11 +1,11 @@
 package ss.parser.ad.home;
 
 import org.springframework.stereotype.Component;
-import ss.parser.ad.AdTask;
+import ss.parser.ad.AbstractAdTask;
 import ss.parser.notification.NotificationService;
 
 @Component
-class HomeTask extends AdTask {
+class HomeTask extends AbstractAdTask {
     HomeTask(HomeConfig homeConfig, NotificationService notificationService) {
         super(homeConfig, notificationService);
     }

@@ -11,16 +11,19 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
 
-public abstract class AbstractNotificationChannel implements NotificationChannel {
+public abstract class AbstractChannel implements NotificationChannel {
     protected final Logger log = LoggerFactory.getLogger(getClass());
     protected final Map<String, List<String>> errorsQueue = new ConcurrentHashMap<>();
     protected final Map<String, List<String>> messagesQueue = new ConcurrentHashMap<>();
 
-    protected abstract NotificationConfig getConfig();
-
     protected abstract String format(Ad ad);
 
     protected abstract void flushQueues();
+
+    @Override
+    public String getName() {
+        return getClass().getSimpleName().replace("Channel", "");
+    }
 
     @Override
     public boolean isEnabled() {

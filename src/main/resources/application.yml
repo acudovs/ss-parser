@@ -2,7 +2,15 @@ logging:
   level:
     ss.parser: DEBUG
 
+server:
+  address: 127.0.0.1
+
 spring:
+  security:
+    user:
+      name: admin
+      password: admin
+
   mail:
     host: localhost
     protocol: smtps

@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 public class RssRegexTest {
 
     @SuppressWarnings("unchecked")
-    public static void main(String[] args) throws Exception {
+    static void main(String[] args) throws Exception {
         if (args.length < 1) {
             System.err.println("Usage: testRegex -PadType=<type> [-Pregex=<regex>]");
             System.err.println("  type: car, flat-sell, flat-rent, home");

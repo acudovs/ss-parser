@@ -6,8 +6,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 import ss.parser.ad.Ad;
-import ss.parser.notification.AbstractNotificationChannel;
-import ss.parser.notification.NotificationConfig;
+import ss.parser.notification.AbstractChannel;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -16,12 +15,12 @@ import static java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME;
 
 @Component
 @RequiredArgsConstructor
-class MailServiceImpl extends AbstractNotificationChannel implements MailService {
+class MailChannel extends AbstractChannel {
     private final MailConfig mailConfig;
     private final JavaMailSender mailSender;
 
     @Override
-    protected NotificationConfig getConfig() {
+    public MailConfig getConfig() {
         return mailConfig;
     }
 

@@ -3,11 +3,11 @@ package ss.parser.ad.home;
 import lombok.Getter;
 import lombok.ToString;
 import org.w3c.dom.Element;
-import ss.parser.ad.AdImpl;
+import ss.parser.ad.AbstractAd;
 
 @Getter
 @ToString
-class Home extends AdImpl {
+class Home extends AbstractAd {
     private final String region;
     private final String address;
     private final int area;

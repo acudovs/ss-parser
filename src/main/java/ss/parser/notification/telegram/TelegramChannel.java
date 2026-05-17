@@ -7,8 +7,7 @@ import org.jsoup.nodes.Document.OutputSettings;
 import org.jsoup.safety.Safelist;
 import org.springframework.stereotype.Component;
 import ss.parser.ad.Ad;
-import ss.parser.notification.AbstractNotificationChannel;
-import ss.parser.notification.NotificationConfig;
+import ss.parser.notification.AbstractChannel;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -19,13 +18,13 @@ import static java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME;
 
 @Component
 @RequiredArgsConstructor
-class TelegramServiceImpl extends AbstractNotificationChannel implements TelegramService {
+class TelegramChannel extends AbstractChannel {
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private final HttpClient httpClient = HttpClient.newHttpClient();
     private final TelegramConfig telegramConfig;
 
     @Override
-    protected NotificationConfig getConfig() {
+    public TelegramConfig getConfig() {
         return telegramConfig;
     }
 
@@ -46,6 +45,10 @@ class TelegramServiceImpl extends AbstractNotificationChannel implements Telegra
         batch(errorsQueue, "\n\n", (text, sender) -> post(telegramConfig.getAdminChatId(), text, sender));
         batch(messagesQueue, "\n\n", (text, sender) -> post(telegramConfig.getChatId(), text, sender));
     }
+
+    private record Message(String chat_id, String text, String parse_mode, LinkPreviewOptions link_preview_options) {}
+
+    private record LinkPreviewOptions(boolean is_disabled) {}
 
     private void post(String chatId, String text, String sender) {
         String url = "https://api.telegram.org/bot" + telegramConfig.getBotToken() + "/sendMessage";
@@ -68,8 +71,4 @@ class TelegramServiceImpl extends AbstractNotificationChannel implements Telegra
             log.error("Failed to send Telegram message to {}", chatId, e);
         }
     }
-
-    private record LinkPreviewOptions(boolean is_disabled) {}
-
-    private record Message(String chat_id, String text, String parse_mode, LinkPreviewOptions link_preview_options) {}
 }

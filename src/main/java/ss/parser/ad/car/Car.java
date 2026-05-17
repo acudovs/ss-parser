@@ -3,11 +3,11 @@ package ss.parser.ad.car;
 import lombok.Getter;
 import lombok.ToString;
 import org.w3c.dom.Element;
-import ss.parser.ad.AdImpl;
+import ss.parser.ad.AbstractAd;
 
 @Getter
 @ToString
-class Car extends AdImpl {
+class Car extends AbstractAd {
     private final String mark;
     private final String model;
     private final String engine;

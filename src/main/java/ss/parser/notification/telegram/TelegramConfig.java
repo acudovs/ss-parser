@@ -16,15 +16,15 @@ import java.time.Duration;
 @Component
 @ConfigurationProperties("ss-parser.telegram")
 class TelegramConfig implements NotificationConfig {
-    private boolean enabled;
-    private Duration rate;
+    private volatile boolean enabled;
+    private volatile Duration rate;
     @NestedConfigurationProperty
-    private WorkingHours workingHours;
-    private int maxMessageSize;
-    private String botToken;
-    private String chatId;
-    private String adminChatId;
-    private Duration timeout;
+    private volatile WorkingHours workingHours;
+    private volatile int maxMessageSize;
+    private volatile String botToken;
+    private volatile String chatId;
+    private volatile String adminChatId;
+    private volatile Duration timeout;
 
     @PostConstruct
     private void init() {

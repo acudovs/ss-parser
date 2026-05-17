@@ -5,4 +5,4 @@ import org.springframework.stereotype.Component;
 
 @Component
 @ConfigurationProperties("ss-parser.flat-sell")
-class FlatSellConfig extends FlatConfig {}
+class FlatSellConfig extends AbstractFlatConfig {}

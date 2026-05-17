@@ -12,10 +12,10 @@ For a quick start, use the following instructions
 git clone https://github.com/acudovs/ss-parser.git
 cd ss-parser
 ./gradlew jibDockerBuild
-docker run -it --rm ss-parser:1.17
+docker run -it --rm ss-parser:1.18
 ```
 
-Congratulations! You have just compiled the SS.COM Parser Java application, packed it into the Docker image and ran the
+Congratulations! You have just compiled the SS.COM Parser Java application, packed it into the Docker image, and ran the
 Docker container. You can now lean back and enjoy the logs :)
 
 ## Configuration
@@ -42,6 +42,8 @@ SPRING_MAIL_HOST=smtp.gmail.com
 SPRING_MAIL_USERNAME=user@gmail.com
 SPRING_MAIL_PASSWORD=secret
 
+SPRING_SECURITY_USER_PASSWORD=your-password
+
 SS_PARSER_MAIL_ENABLED=true
 SS_PARSER_MAIL_FROM=user@gmail.com
 SS_PARSER_MAIL_TO=user@gmail.com
@@ -63,13 +65,13 @@ SS_PARSER_HOME_EXPRESSION=region matches 'Дарзциемс|Плявниеки|
 Then run the Docker container with the new configuration file.
 
 ```shell
-docker run -it --rm --env-file ss-parser.env ss-parser:1.17
+docker run -it --rm --env-file ss-parser.env ss-parser:1.18
 ```
 
 Once you are satisfied with the filter and configuration, just run the Docker container in the background.
 
 ```shell
-docker run -d --rm --env-file ss-parser.env ss-parser:1.17
+docker run -d --rm --env-file ss-parser.env ss-parser:1.18
 ```
 
 ## Telegram Setup
@@ -115,10 +117,90 @@ If neither variable is set for a channel, that channel delivers at any time.
 
 Overnight windows are supported: setting `START=22:00` and `END=08:00` delivers between 22:00 and 08:00.
 
+## Web Dashboard
+
+A web dashboard is available at `http://localhost:8080/` once the application is running. It shows the status of all
+ad tasks and notification channels and allows toggling them on/off, adjusting rates, editing SpEL filter expressions,
+and configuring working hours - all without restarting the application.
+
+Default credentials: **admin / admin**
+
+Override via environment variables:
+
+```shell
+SPRING_SECURITY_USER_NAME=admin
+SPRING_SECURITY_USER_PASSWORD=your-password
+```
+
+## Filter Expressions
+
+Each ad type has a SpEL filter expression that determines which ads trigger a notification. It is evaluated against each
+incoming ad - only ads for which it returns `true` are sent. The default expression is `true` (match everything).
+
+Expressions support comparisons (`==`, `!=`, `<`, `>`, `<=`, `>=`), logical operators (`and`, `or`, `not`), the
+`matches` operator for regex matching against strings, arithmetic operators, `between`, and `in`/`not in`. See
+the [Spring Expression Language reference](https://docs.spring.io/spring-framework/reference/core/expressions/language-ref.html)
+for the full list of supported operators and syntax.
+
+### Car
+
+| Field    | Type   | Description                     |
+|----------|--------|---------------------------------|
+| `mark`   | String | Brand, e.g. `'Lexus'`           |
+| `model`  | String | Model name                      |
+| `engine` | String | Engine descriptor, e.g. `'3.5'` |
+| `year`   | int    | Year of manufacture             |
+| `run`    | int    | Mileage in thousands of km      |
+| `price`  | int    | Price in EUR                    |
+
+```shell
+SS_PARSER_CAR_EXPRESSION=mark == 'Lexus' and year >= 2023 and price < 60000
+```
+
+### Flat Sell / Flat Rent
+
+| Field     | Type   | Description                    |
+|-----------|--------|--------------------------------|
+| `region`  | String | District, e.g. `'Плявниеки'`   |
+| `address` | String | Street address                 |
+| `series`  | String | Building series, e.g. `'Нов.'` |
+| `rooms`   | int    | Number of rooms                |
+| `area`    | int    | Area in m²                     |
+| `floor`   | int    | Floor number                   |
+| `floors`  | int    | Total floors in the building   |
+| `price`   | int    | Price in EUR                   |
+| `ppm2`    | int    | Price per m² in EUR            |
+
+```shell
+SS_PARSER_FLAT_SELL_EXPRESSION=region matches 'Плявниеки|Пурвциемс' and rooms > 3 and area > 100
+```
+
+### Home / House
+
+| Field     | Type   | Description         |
+|-----------|--------|---------------------|
+| `region`  | String | District            |
+| `address` | String | Street address      |
+| `area`    | int    | Building area in m² |
+| `floors`  | int    | Number of floors    |
+| `land`    | double | Land area in m²     |
+| `price`   | int    | Price in EUR        |
+
+```shell
+SS_PARSER_HOME_EXPRESSION=region matches 'Дарзциемс|Плявниеки|Пурвциемс' and area > 200 and land > 600
+```
+
+### Notes
+
+- String comparisons are case-sensitive; use `matches` with a regex for multi-value or case-insensitive matching.
+- A missing field (e.g. `engine` not listed in the ad) is parsed as `0` for numbers and `''` for strings.
+- Expressions can be updated at runtime via the web dashboard or `PATCH /api/tasks/{name}` without restarting.
+- Type references (`T(...)`), bean references (`@bean`), and constructors are not permitted in expressions.
+
 ## Building for a Specific Architecture
 
 By default `./gradlew jibDockerBuild` builds for the host architecture using JRE 25. Pass `-Parch=<arch>` to target
-a different platform. The JRE version is selected automatically — ARM 32-bit uses JRE 17 (the last LTS with `arm/v7`
+a different platform. The JRE version is selected automatically - ARM 32-bit uses JRE 17 (the last LTS with `arm/v7`
 support), everything else uses JRE 25. The image tag gets an `-<arch>` suffix.
 
 ```shell

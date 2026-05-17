@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SS Parser</title>
+    <style>
+        :root {
+            --green: #4caf50;
+            --blue: #1976d2;
+            --gray: #757575;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: #f5f5f5;
+            color: #212121;
+        }
+
+        header {
+            background: #fff;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        header h1 {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        header button {
+            margin-left: auto;
+            padding: 0.4rem 1rem;
+            background: var(--blue);
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        header button.off {
+            background: var(--gray);
+        }
+
+        main {
+            padding: 1.5rem;
+            max-width: 900px;
+        }
+
+        h2 {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--gray);
+            margin: 1.75rem 0 0.75rem;
+        }
+
+        h2:first-child {
+            margin-top: 0;
+        }
+
+        .cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1rem;
+            min-width: 160px;
+            cursor: pointer;
+            transition: box-shadow 0.15s;
+            user-select: none;
+        }
+
+        .card:hover {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, .1);
+        }
+
+        .card.selected {
+            border-color: var(--blue);
+        }
+
+        .card.enabled {
+            border-color: var(--green);
+        }
+
+        .card.enabled.selected {
+            border-color: var(--blue);
+        }
+
+        .card-name {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 0.4rem;
+        }
+
+        .badge-on {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .badge-off {
+            background: #f5f5f5;
+            color: var(--gray);
+        }
+
+        .badge-scheduled {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .meta {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        .meta .dim {
+            opacity: 0.5;
+        }
+
+        .editor {
+            background: #fff;
+            border: 1px solid var(--blue);
+            border-radius: 8px;
+            padding: 1.25rem;
+            margin-top: 0.75rem;
+        }
+
+        .editor-title {
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .field {
+            margin-bottom: 0.85rem;
+        }
+
+        .field label {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--gray);
+            margin-bottom: 0.3rem;
+        }
+
+        .field input[type=text] {
+            width: 100%;
+            padding: 0.45rem 0.6rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
+        .field input[type=text]:focus {
+            outline: none;
+            border-color: var(--blue);
+        }
+
+        .toggle-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.9rem;
+            margin-bottom: 0.85rem;
+        }
+
+        .switch {
+            position: relative;
+            width: 44px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            inset: 0;
+            background: #ccc;
+            border-radius: 24px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .slider:before {
+            content: "";
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            left: 3px;
+            top: 3px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.2s;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, .25);
+        }
+
+        input:checked + .slider {
+            background: var(--green);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+
+        .actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .btn {
+            padding: 0.4rem 1.1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        .btn-primary {
+            background: var(--blue);
+            color: white;
+        }
+
+        .btn-cancel {
+            background: #e0e0e0;
+            color: #212121;
+        }
+
+        .err {
+            color: #c62828;
+            font-size: 0.82rem;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>SS Parser</h1>
+    <button id="refresh-btn" onclick="toggleRefresh()">Refresh: ON</button>
+</header>
+<main id="app">Loading...</main>
+<script>
+    let ads = [], channels = [];
+    let expanded = null;
+    let autoRefresh = true;
+    let refreshTimer = null;
+
+    const refreshBtn = document.getElementById('refresh-btn');
+
+    function scheduleRefresh() {
+        clearInterval(refreshTimer);
+        refreshTimer = autoRefresh && !expanded ? setInterval(load, 3000) : null;
+    }
+
+    function toggleRefresh() {
+        autoRefresh = !autoRefresh;
+        refreshBtn.textContent = autoRefresh ? 'Refresh: ON' : 'Refresh: OFF';
+        refreshBtn.classList.toggle('off', !autoRefresh);
+        if (autoRefresh) load();
+        scheduleRefresh();
+    }
+
+    const LABELS = {
+        Car: 'Car', FlatSell: 'Flat Sell', FlatRent: 'Flat Rent',
+        Home: 'Home', Mail: 'Mail', Telegram: 'Telegram'
+    };
+
+    function label(name) {
+        return LABELS[name] || name.charAt(0).toUpperCase() + name.slice(1);
+    }
+
+    function fmtRate(secs) {
+        if (secs < 60) return secs + 's';
+        if (secs < 3600) return (secs / 60 | 0) + 'm';
+        return (secs / 3600 | 0) + 'h';
+    }
+
+    function fmtDate(iso) {
+        return iso ? new Date(iso).toLocaleString() : 'Never';
+    }
+
+    function esc(s) {
+        return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    async function load() {
+        try {
+            const r = await fetch('/api/status');
+            if (!r.ok) throw new Error(r.statusText);
+            const data = await r.json();
+            ads = data.ads;
+            channels = data.channels;
+            render();
+        } catch (e) {
+            document.getElementById('app').textContent = 'Error: ' + e.message;
+        }
+    }
+
+    function toggleExpand(name) {
+        expanded = expanded === name ? null : name;
+        scheduleRefresh();
+        render();
+    }
+
+    function cardHtml(t) {
+        const badge = t.scheduled
+            ? '<span class="badge badge-scheduled">Scheduled</span>'
+            : t.enabled
+                ? '<span class="badge badge-on">ON</span>'
+                : '<span class="badge badge-off">OFF</span>';
+        const sel = expanded === t.name ? ' selected' : '';
+        const en = t.enabled ? ' enabled' : '';
+        return `<div class="card${en}${sel}" onclick="toggleExpand('${t.name}')">
+      <div class="card-name">${label(t.name)}</div>
+      ${badge}
+      <div class="meta">Rate: ${fmtRate(t.rateSecs)}<br>${t.scheduled
+          ? `Next run: ${fmtDate(t.nextRun)}`
+          : `<span class="dim">Last run: ${fmtDate(t.nextRun)}</span>`}</div>
+    </div>`;
+    }
+
+    function editorHtml(t, isAd) {
+        const fields = isAd ? `
+      <div class="field">
+        <label>Rate (seconds)</label>
+        <input type="text" id="ed-rate" value="${esc(t.rateSecs)}">
+      </div>
+      <div class="field">
+        <label>Filter expression (SpEL)</label>
+        <input type="text" id="ed-expr" value="${esc(t.expression || '')}">
+      </div>` : `
+      <div class="field">
+        <label>Rate (seconds)</label>
+        <input type="text" id="ed-rate" value="${esc(t.rateSecs)}">
+      </div>
+      <div class="field">
+        <label>Working hours start (HH:MM, blank = unrestricted)</label>
+        <input type="text" id="ed-wh-start" value="${esc(t.workingHours?.start || '')}">
+      </div>
+      <div class="field">
+        <label>Working hours end (HH:MM, blank = unrestricted)</label>
+        <input type="text" id="ed-wh-end" value="${esc(t.workingHours?.end || '')}">
+      </div>`;
+        const saveCall = isAd ? `saveTask('${t.name}')` : `saveChannel('${t.name}')`;
+        return `<div class="editor">
+      <div class="editor-title">${label(t.name)}</div>
+      <div class="toggle-row">
+        <label class="switch">
+          <input type="checkbox" id="ed-enabled" ${t.enabled ? 'checked' : ''}>
+          <span class="slider"></span>
+        </label>
+        <span>Enabled</span>
+      </div>
+      ${fields}
+      <div id="ed-err" class="err"></div>
+      <div class="actions">
+        <button class="btn btn-primary" onclick="${saveCall}">Save</button>
+        <button class="btn btn-cancel" onclick="toggleExpand('${t.name}')">Cancel</button>
+      </div>
+    </div>`;
+    }
+
+    function section(heading, group, isAd) {
+        if (!group.length) return '';
+        const cards = group.map(cardHtml).join('');
+        const edTask = expanded && group.find(t => t.name === expanded);
+        const editor = edTask ? editorHtml(edTask, isAd) : '';
+        return `<h2>${heading}</h2><div class="cards">${cards}</div>${editor}`;
+    }
+
+    function render() {
+        document.getElementById('app').innerHTML =
+            section('Ad Tasks', ads, true) + section('Notification Channels', channels, false);
+    }
+
+    async function patch(url, body) {
+        const r = await fetch(url, {
+            method: 'PATCH',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(body)
+        });
+        if (!r.ok) throw new Error(await r.text());
+    }
+
+    async function saveTask(name) {
+        const rateSecs = parseInt(document.getElementById('ed-rate').value, 10);
+        try {
+            await patch('/api/tasks/' + name, {
+                enabled: document.getElementById('ed-enabled').checked,
+                rateSecs: isNaN(rateSecs) ? null : rateSecs,
+                expression: document.getElementById('ed-expr').value.trim() || 'true'
+            });
+            toggleExpand(name);
+            await load();
+        } catch (e) {
+            document.getElementById('ed-err').textContent = e.message;
+        }
+    }
+
+    async function saveChannel(name) {
+        const rateSecs = parseInt(document.getElementById('ed-rate').value, 10);
+        const whStart = document.getElementById('ed-wh-start').value.trim();
+        const whEnd = document.getElementById('ed-wh-end').value.trim();
+        try {
+            await patch('/api/channels/' + name, {
+                enabled: document.getElementById('ed-enabled').checked,
+                rateSecs: isNaN(rateSecs) ? null : rateSecs,
+                workingHours: {start: whStart || null, end: whEnd || null}
+            });
+            toggleExpand(name);
+            await load();
+        } catch (e) {
+            document.getElementById('ed-err').textContent = e.message;
+        }
+    }
+
+    load().then(scheduleRefresh);
+</script>
+</body>
+</html>
