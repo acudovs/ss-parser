@@ -4,6 +4,16 @@ SS.COM Parser is a simple RSS feed parser of the advertising site https://ss.com
 and [Spring Boot](https://spring.io/projects/spring-boot). It uses [Docker](https://www.docker.com/) as the primary
 execution environment and [Gradle](https://gradle.org/) build tool for building application image.
 
+## Table of Contents
+
+- [Quickstart](#quickstart)
+- [Configuration](#configuration)
+- [Telegram Setup](#telegram-setup)
+- [Working Hours](#working-hours)
+- [Web Dashboard](#web-dashboard)
+- [Filter Expressions](#filter-expressions)
+- [Building for a Specific Platform](#building-for-a-specific-platform)
+
 ## Quickstart
 
 For a quick start, use the following instructions
@@ -197,19 +207,20 @@ SS_PARSER_HOME_EXPRESSION=region matches 'Дарзциемс|Плявниеки|
 - Expressions can be updated at runtime via the web dashboard or `PATCH /api/tasks/{name}` without restarting.
 - Type references (`T(...)`), bean references (`@bean`), and constructors are not permitted in expressions.
 
-## Building for a Specific Architecture
+## Building for a Specific Platform
 
-By default `./gradlew jibDockerBuild` builds for the host architecture using JRE 25. Pass `-Parch=<arch>` to target
-a different platform. The JRE version is selected automatically - ARM 32-bit uses JRE 17 (the last LTS with `arm/v7`
-support), everything else uses JRE 25. The image tag gets an `-<arch>` suffix.
+By default `./gradlew jibDockerBuild` builds for the host platform using JRE 25. Pass `-Parch=<arch>` and/or `-Pos=<os>`
+to target a different platform. The OS defaults to the host OS (`linux`, `darwin`, or `windows`). The JRE version is
+selected automatically - ARM 32-bit uses JRE 17 (the last LTS with `arm/v7` support), everything else uses JRE 25. The
+image tag gets an `-<arch>` suffix when `arch` is specified.
 
 ```shell
-# Host architecture, JRE 25
+# Host platform, JRE 25
 ./gradlew jibDockerBuild
 
-# ARM 32-bit, JRE 17
-./gradlew jibDockerBuild -Parch=arm
+# ARM 32-bit Linux, JRE 17 (e.g. Raspberry Pi 2)
+./gradlew jibDockerBuild -Parch=arm -Pos=linux
 
-# ARM 64-bit, JRE 25
-./gradlew jibDockerBuild -Parch=arm64
+# ARM 64-bit Linux, JRE 25 (e.g. Raspberry Pi 3)
+./gradlew jibDockerBuild -Parch=arm64 -Pos=linux
 ```
