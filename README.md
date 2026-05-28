@@ -22,7 +22,7 @@ For a quick start, use the following instructions
 git clone https://github.com/acudovs/ss-parser.git
 cd ss-parser
 ./gradlew jibDockerBuild
-docker run -it --rm ss-parser:1.18
+docker run -it --rm ss-parser:1.19
 ```
 
 Congratulations! You have just compiled the SS.COM Parser Java application, packed it into the Docker image, and ran the
@@ -75,13 +75,13 @@ SS_PARSER_HOME_EXPRESSION=region matches 'Дарзциемс|Плявниеки|
 Then run the Docker container with the new configuration file.
 
 ```shell
-docker run -it --rm --env-file ss-parser.env ss-parser:1.18
+docker run -it --rm --env-file ss-parser.env ss-parser:1.19
 ```
 
 Once you are satisfied with the filter and configuration, just run the Docker container in the background.
 
 ```shell
-docker run -d --rm --env-file ss-parser.env ss-parser:1.18
+docker run -d --rm --env-file ss-parser.env ss-parser:1.19
 ```
 
 ## Telegram Setup
