@@ -18,6 +18,6 @@ abstract class AbstractFlatConfig extends AbstractAdConfig {
                 parseInt(matcher.group("floor")),
                 parseInt(matcher.group("floors")),
                 parseInt(matcher.group("price")),
-                parseInt(matcher.group("ppm2")));
+                parseDouble(matcher.group("ppm2")));
     }
 }
