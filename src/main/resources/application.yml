@@ -50,7 +50,7 @@ ss-parser:
     rate: 10m
     url: https://www.ss.com/ru/transport/cars/sell/rss/
     timeout: 10s
-    regex: "(?s:(Марка: (<b>)+(?<mark>[^<]+)<br>(?<model>[^<]+)(</b>)+<br/>.*?)?Год: (<b>)+(?<year>\\d+)(</b>)+<br/>.*?(Объём: (<b>)+(?<engine>[^<]+)(</b>)+<br/>.*?)?(Пробег: (<b>)+(?<run>\\d+)(</b>)? тыс.</b><br/>.*?)?Цена: (<b>)+(?<price>[\\d,]+))(</b>)?  €"
+    regex: "(?s:(Марка: (<b>)+(?<mark>[^<]+)<br>(?<model>[^<]+)(</b>)+<br/>.*?)?Год: (<b>)+(?<year>\\d+)(</b>)+<br/>.*?(Объём: (<b>)+(<span[^>]*>)?(?<engine>[^<]+)(</span>)?(</b>)+<br/>.*?)?(Пробег: (<b>)+(?<run>\\d+)(</b>)? тыс.</b><br/>.*?)?Цена: (<b>)+(?<price>[\\d,]+))(</b>)?  €"
     replace: "Марка: <b>${mark}</b><br/>Модель: <b>${model}</b><br/>Год: <b>${year}</b><br/>Двигатель: <b>${engine}</b><br/>Пробег: <b>${run} тыс.</b><br/>Цена: <b>${price} €</b>"
     expression: true
 
